@@ -1,0 +1,96 @@
+-- -----------------------------
+-- 表结构 `ocenter_shop`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `ocenter_shop` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_name` varchar(25) NOT NULL COMMENT '商品名称',
+  `goods_ico` int(11) NOT NULL COMMENT '商品图标',
+  `goods_introduct` varchar(100) NOT NULL COMMENT '商品简介',
+  `goods_detail` text NOT NULL COMMENT '商品详情',
+  `money_need` int(11) NOT NULL COMMENT '需要金币数',
+  `goods_num` int(11) NOT NULL COMMENT '商品余量',
+  `changetime` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL COMMENT '状态，-1：删除；0：禁用；1：启用',
+  `createtime` int(11) NOT NULL COMMENT '创建时间',
+  `category_id` int(11) NOT NULL,
+  `is_new` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否为新品',
+  `sell_num` int(11) NOT NULL DEFAULT '0' COMMENT '已出售量',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='商品信息';
+
+
+-- -----------------------------
+-- 表结构 `ocenter_shop_address`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `ocenter_shop_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `address` varchar(200) NOT NULL,
+  `zipcode` int(11) NOT NULL,
+  `create_time` int(11) NOT NULL,
+  `change_time` int(11) NOT NULL,
+  `name` varchar(25) NOT NULL,
+  `phone` varchar(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+
+
+-- -----------------------------
+-- 表结构 `ocenter_shop_buy`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `ocenter_shop_buy` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(11) NOT NULL COMMENT '商品id',
+  `goods_num` int(11) NOT NULL COMMENT '购买数量',
+  `status` tinyint(4) NOT NULL COMMENT '状态，-1：未领取；0：申请领取；1：已领取',
+  `uid` int(11) NOT NULL COMMENT '用户id',
+  `createtime` int(11) NOT NULL COMMENT '购买时间',
+  `gettime` int(11) NOT NULL COMMENT '交易结束时间',
+  `address_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COMMENT='购买商品信息表';
+
+
+-- -----------------------------
+-- 表结构 `ocenter_shop_category`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `ocenter_shop_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(25) NOT NULL,
+  `create_time` int(11) NOT NULL,
+  `update_time` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `sort` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+-- -----------------------------
+-- 表结构 `ocenter_shop_log`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `ocenter_shop_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `message` varchar(500) NOT NULL,
+  `create_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+-- -----------------------------
+-- 表结构 `ocenter_shop_see`
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `ocenter_shop_see` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `create_time` int(11) NOT NULL,
+  `update_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- -----------------------------
+-- 表内记录 `ocenter_shop_category`
+-- -----------------------------
+INSERT INTO `ocenter_shop_category` VALUES ('1', '默认分类', '1403507725', '1403507717', '1', '0', '0');

@@ -7,7 +7,6 @@
  */
 
 
-
 /** 不兼容sae 只兼容本地 --駿濤
  * @param        $filename
  * @param int $width
@@ -98,35 +97,35 @@ function getRootUrl()
 
 /**通过ID获取到图片的缩略图
  * @param        $cover_id 图片的ID
- * @param int    $width 需要取得的宽
+ * @param int $width 需要取得的宽
  * @param string $height 需要取得的高
- * @param int    $type 图片的类型，qiniu 七牛，local 本地, sae SAE
- * @param bool   $replace 是否强制替换
+ * @param int $type 图片的类型，qiniu 七牛，local 本地, sae SAE
+ * @param bool $replace 是否强制替换
  * @return string
  * @auth 陈一枭
  */
 function getThumbImageById($cover_id, $width = 100, $height = 'auto', $type = 0, $replace = false)
 {
 
-    $picture=S('picture_'.$cover_id);
-    if(empty($picture)){
+    $picture = S('picture_' . $cover_id);
+    if (empty($picture)) {
         $picture = M('Picture')->where(array('status' => 1))->getById($cover_id);
-        S('picture_'.$cover_id,$picture);
+        S('picture_' . $cover_id, $picture);
     }
     if (empty($picture)) {
-        return  get_pic_src( 'Public/images/nopic.png');
+        return get_pic_src('Public/images/nopic.png');
     }
 
-    if( $picture['type'] == 'local'){
+    if ($picture['type'] == 'local') {
         $attach = getThumbImage($picture['path'], $width, $height, $type, $replace);
         return get_pic_src($attach['src']);
-    }else{
+    } else {
         $new_img = $picture['path'];
         $name = get_addon_class($picture['type']);
         if (class_exists($name)) {
             $class = new $name();
             if (method_exists($class, 'thumb')) {
-                $new_img =  $class->thumb($picture['path'],$width,$height,$type,$replace);
+                $new_img = $class->thumb($picture['path'], $width, $height, $type, $replace);
             }
         }
         return get_pic_src($new_img);
@@ -141,10 +140,10 @@ function getThumbImageById($cover_id, $width = 100, $height = 'auto', $type = 0,
  * @param bool $replace 裁剪
  * @return string
  */
-function thumb($cover_id, $width = 100, $height = 'auto', $type = 0, $replace = false){
-    return getThumbImageById($cover_id, $width, $height , $type, $replace);
+function thumb($cover_id, $width = 100, $height = 'auto', $type = 0, $replace = false)
+{
+    return getThumbImageById($cover_id, $width, $height, $type, $replace);
 }
-
 
 
 /**获取第一张图
@@ -168,10 +167,17 @@ function get_pic($str_img)
  * @return mixed
  * @author:xjw129xjt(肖骏涛) xjt@ourstu.com
  */
-function get_pic_src($path){
-    if (is_bool(strpos($path, 'http://')) || is_bool(strpos($path, 'https://'))) {
+function get_pic_src($path)
+{
+    //不存在http://
+    $not_http_remote=(strpos($path, 'http://') === false);
+    //不存在https://
+    $not_https_remote=(strpos($path, 'https://') === false);
+    if ($not_http_remote && $not_https_remote) {
+        //本地url
         return str_replace('//', '/', getRootUrl() . $path); //防止双斜杠的出现
-    }else{
+    } else {
+        //远端url
         return $path;
     }
 }

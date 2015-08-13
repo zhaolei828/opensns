@@ -13,7 +13,7 @@ class MessageController extends AdminController
 {
 
 
-    public function userList()
+    public function userList($page=1,$r=20)
     {
 
         $aUserGroup = I('get.user_group', 0, 'intval');
@@ -25,7 +25,7 @@ class MessageController extends AdminController
             $map['uid'] = array('in', $uids);
         }
 
-        $user = D('member')->where($map)->field('uid,nickname')->select();
+        $user = D('member')->where($map)->page($page,$r)->field('uid,nickname')->select();
         foreach ($user as &$v) {
             $v['id'] = $v['uid'];
         }

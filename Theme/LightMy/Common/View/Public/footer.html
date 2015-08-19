@@ -1,0 +1,49 @@
+<div class="footer-bar ">
+    <div class="container">
+<!--        <div class="row">
+            <div class="col-xs-12">
+                <h2>
+                    友情链接
+                </h2>
+                <ul class="friend-link">
+                    {:Hook('friendLink')}
+                </ul>
+            </div>
+        </div>
+        <hr>-->
+        <div class="row">
+            <div class="col-xs-12">
+                <ul class="about-link">
+                    <li><a href="/paper_3.html">关于我们</a></li>
+                    <li><a href="/paper_4.html">联系我们</a></li>
+                    <li><a href="/paper_5.html">意见反馈</a></li>
+                    <li><a href="/paper_6.html">友情链接</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <hr>
+            <div class="col-xs-12 copyright">
+                <span>Copyright ©2015- <a href="http://6jlife.com">六角生活网</a></span>
+                <span>Powered by <a href="http://www.opensns.cn">OpenSNS</a></span>
+                <span>备案号：<a href="http://www.miitbeian.gov.cn/" target="_blank">
+                    {:modC('ICP','暂未设置','Config')} </a></span>
+                {$count_code}
+            </div>
+        </div>
+    </div>
+
+</div>
+<div>
+    {:C('COUNT_CODE')}
+</div>
+<include file="Public/js"/>
+
+<block name="script"><!-- 用于加载js代码 --></block>
+
+<!-- 页面footer钩子，一般用于加载插件JS文件和JS代码 -->
+{:hook('pageFooter', 'widget')}
+<div class="hidden"><!-- 用于加载统计代码等隐藏元素 -->
+    <block name="hidden"></block>
+</div>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html>
-<head>
+    <head>
     <include file="Public/head"/>
     <link href="__CSS__/home.css" type="text/css" rel="stylesheet">
     <php> D('Member')->need_login();</php>
@@ -110,6 +110,26 @@
         <php>}</php>
 
     </volist>
+    <div class="block-bar">
+        <div class="container">
+            <div class="block-body row">
+                <div class="col-xs-12">
+                    <div class="common-block">
+                        <h2>
+                            友情链接                    
+                        </h2>
+                        <div>
+                            <div>
+                                <ul class="friend-link clearfix">
+                                    {:Hook('friendLink')}               
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

@@ -59,7 +59,11 @@
                                 </div>
                                 <p>
 
-                                    <php>$config="toolbars:[['source','|','bold','italic','underline','fontsize','forecolor','fontfamily','backcolor','|','link','emotion','scrawl','attachment','insertvideo','insertimage','insertcode']]";</php>
+                                    <php>
+                                        $config="toolbars:[['source','|','bold','italic','underline','fontsize','forecolor',
+                                        'fontfamily','backcolor','|','indent','justifyleft','justifycenter','justifyright','rowspacingtop',
+                                        'rowspacingbottom','lineheight','|','link','emotion','scrawl','attachment','insertvideo','insertimage',
+                                        'insertcode','drafts']]";</php>
 
                                     {:W('Common/Ueditor/editor',array('myeditor','content',$post['content'],'100%','350px',$config))}
 

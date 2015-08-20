@@ -565,6 +565,9 @@ class IndexController extends Controller
             $dm = "http://$_SERVER[HTTP_HOST]" . __ROOT__; //前缀图片多余截取
             $max = count($arr['1']) > 9 ? 9 : count($arr['1']);
             for ($i = 0; $i < $max; $i++) {
+                if(isset($result_id)){
+                    unset($result_id);
+                }
                 $tmparray = strpos($arr['1'][$i], $dm);
                 if (!is_bool($tmparray)) {
                     $path = mb_substr($arr['1'][$i], strlen($dm), strlen($arr['1'][$i]) - strlen($dm));

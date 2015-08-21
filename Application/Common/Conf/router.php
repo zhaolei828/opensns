@@ -51,9 +51,9 @@ return array(
         'news/index/edit'                       => 'news/edit_[id]',
 
         /*动弹*/
-        'weibo/index/index'                     => 'weibo/t_[type]/p_[page]',
-        'weibo/index/weibodetail'               => 'weibo/detail_[id]',
-        'weibo/index/search'                    => 'weibo/search',
+        'weibo/index/index'                     => 'dongtai/t_[type]/p_[page]',
+        'weibo/index/weibodetail'               => 'dongtai/detail_[id]',
+        'weibo/index/search'                    => 'dongtai/search',
         'weibo/topic/topic'                     => 'topic_[type]',
 
         /*群组*/

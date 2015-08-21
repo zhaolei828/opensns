@@ -848,6 +848,7 @@ function execute_action($rules = false, $action_id = null, $user_id = null, $log
 
 
         $rule['rule'] = (is_bool(strpos($rule['rule'], '+')) ? '+' : '') . $rule['rule'];
+        $rule['rule'] = is_bool(strpos($rule['rule'], '-')) ?  $rule['rule'] : substr($rule['rule'],1) ;
         $res = $Model->where(array('uid' => is_login(), 'status' => 1))->setField($field, array('exp', $field  . $rule['rule']));
 
         $scoreModel= D('Ucenter/Score') ;

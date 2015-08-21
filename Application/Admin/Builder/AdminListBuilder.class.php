@@ -118,10 +118,10 @@ class AdminListBuilder extends AdminBuilder
      * @auth 陈一枭
      */
     public function buttonNew($href, $title = '新增', $attr = array())
-    {
-        $attr['href'] = $href;
-        return $this->button($title, $attr);
-    }
+{
+    $attr['href'] = $href;
+    return $this->button($title, $attr);
+}
 
     public function ajaxButton($url, $params, $title, $attr = array())
     {
@@ -209,8 +209,7 @@ class AdminListBuilder extends AdminBuilder
 
     public function buttonSort($href, $title = '排序', $attr = array())
     {
-        $attr['url'] = $href;
-        $attr['class'] = 'btn list_sort';
+        $attr['href'] = $href;
         return $this->button($title, $attr);
     }
 
@@ -549,7 +548,6 @@ class AdminListBuilder extends AdminBuilder
         //nickname转换成text
         $this->convertKey('nickname', 'text', function ($value) {
             $value = query_user(array('nickname', 'uid', 'space_url'), $value);
-            exit;
             return "<a href='" . $value['space_url'] . "' target='_blank'>[{$value[uid]}]" . $value['nickname'] . '</a>';
         });
 

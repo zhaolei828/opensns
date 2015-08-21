@@ -949,9 +949,13 @@ str
             $headers = get_headers($url, 1);
             if ((!array_key_exists("Content-Length", $headers))) $filesize = 0;
             $filesize = $headers["Content-Length"];
-
             //不是所有的文件都会先返回大小的，有些动态页面不先返回总大小，这样就无法计算进度了
-
+            if(file_exists($local)){
+                unlink($local);
+            }
+            if(isset($headers['Location'])){
+                $url=$headers['Location'];
+            }
             if(is_array($filesize)){
                 $filesize=$filesize[1];
             }

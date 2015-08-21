@@ -216,7 +216,7 @@ class ExpressionController extends AdminController
             $this->error('参数错误');
         }
         if ($pkg == 'miniblog') {
-            $path = $this->ROOT_PATH . '/Application/Core/Static/images/Expression/miniblog/' . $aName;
+            $path = $this->ROOT_PATH . '/Application/Core/Static/images/expression/miniblog/' . $aName;
         } else {
             $path = $this->ROOT_PATH . "/Uploads/Expression/" . $pkg . '/' . $aName;
         }

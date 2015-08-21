@@ -101,6 +101,9 @@
                $(this).attr('disabled','disabled');
                $(this).submit();
            });
+            $('#reason,[type="radio"]').change(function(){
+                $('[type="submit"]').attr('disabled',false);
+            });
         });
     </script>
 </block>

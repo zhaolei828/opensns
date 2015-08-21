@@ -70,7 +70,7 @@
 
 
             <div class="form-item cf">
-                <label class="item-label">行为规则<span class="check-tips">（输入行为规则，不写则只记录日志）</span></label>
+                <label class="item-label">积分规则<span class="check-tips">（输入积分规则，不写则只记录日志）</span></label>
 
                 <div class="controls action_rule">
                     <php>
@@ -93,10 +93,10 @@
                             积分的操作
                         </div>
                         <div class="pull-left text-center" style="width: 100px">
-                            周期
+                            周期（小时）
                         </div>
                         <div class="pull-left text-center" style="width: 100px">
-                            最大限制
+                            最大限制（次）
                         </div>
                     </div>
                     <volist name="data['rule']" id="rule">
@@ -160,9 +160,9 @@
             </select>
             <input type="text" name="action_rule[rule][]" title="积分的操作，负数表示减积分。" value="0" class=" form-control"
                    style="width: 100px;display: inline-block"/>
-            <input class="form-control" name="action_rule[cycle][]" title="周期" value="24"
+            <input class="form-control" name="action_rule[cycle][]" title="周期（小时）" value="24"
                    style="width: 100px;display: inline-block">
-            <input class="form-control" name="action_rule[max][]" title="最大限制" value="1"
+            <input class="form-control" name="action_rule[max][]" title="最大限制（次）" value="1"
                    style="width: 100px;display: inline-block">
             <a href="javascript:" data-role="del_rule">删除规则</a>
         </div>

@@ -1,7 +1,13 @@
 <div id="sub_nav">
     <nav class="navbar navbar-default" role="navigation">
         <div class="container" style="width:1180px;">
-            <a href="{:U($MODULE_INFO['entry'])}" class="navbar-brand logo" ><i class="icon-{$brand.icon}"></i> <empty name="brand.title" value="" >{$MODULE_ALIAS}<else/>{$brand.title}</empty></a>
+            <a href="{:U($MODULE_INFO['entry'])}" class="navbar-brand logo"><i class="icon-{$brand.icon}"></i>
+                <empty name="brand.title" value="">{$MODULE_ALIAS}
+                    <else/>
+                    {$brand.title}
+                </empty>
+            </a>
+
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-7">
                     <ul class="nav navbar-nav">
@@ -13,19 +19,19 @@
                                         <neq name="menu.icon" value=""><i class="icon-{$menu.icon}"></i>
                                         </neq>
                                         {$menu.title} <i class="icon-caret-down"></i>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <volist name="menu.children" id="child">
-                                            <li><a href="{$child.href}" class="{$child.class}">
-                                                <neq name="child.icon" value=""><i
-                                                        class="glyphicon glyphicon-{$child.icon}"></i></neq>
-                                                {$child.title}</a></li>
-                                        </volist>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <volist name="menu.children" id="child">
+                                                <li><a href="{$child.href}" class="{$child.class}">
+                                                    <neq name="child.icon" value=""><i
+                                                            class="glyphicon glyphicon-{$child.icon}"></i></neq>
+                                                    {$child.title}</a></li>
+                                            </volist>
 
-                                    </ul>
+                                        </ul>
                                 </li>
                                 <else/>
                                 <!--一级菜单-->
-                                <li id="tab_{$menu.tab}"  class="{$menu.li_class}"
+                                <li id="tab_{$menu.tab}" class="{$menu.li_class}"
                                         ><a href="{$menu.href}" class="{$menu.a_class}">
                                     <neq name="menu.icon" value=""><i class="glyphicon glyphicon-{$menu.icon}"></i>
                                     </neq>
@@ -43,10 +49,14 @@
                                         <a href="{$menu.href}" class="{$menu.a_class}"><i class="icon-{$menu.icon}"></i>{$menu.html}</a>
                                     </case>
                                     <case value="search">
-                                        <form class="navbar-form navbar-right" action="{$menu.action}"  method="{$menu.from_method}" role="search">
+                                        <form class="navbar-form navbar-right" action="{$menu.action}"
+                                              method="{$menu.from_method}" role="search">
                                             <div class="search-input-group">
-                                                <button type="submit" class="input-btn" style="border-color: transparent;background: transparent;padding: 0 10px 0 10px;"><i class="icon-search"></i></button>
-                                                <input type="text" class="input" placeholder="{$menu.input_title}" name="{$menu.input_name}" value="{$search_keywords}">
+                                                <button type="submit" class="input-btn"
+                                                        style="border-color: transparent;background: transparent;padding: 0 10px 0 10px;">
+                                                    <i class="icon-search"></i></button>
+                                                <input type="text" class="input" placeholder="{$menu.input_title}"
+                                                       name="{$menu.input_name}" value="{$search_keywords}">
                                             </div>
                                             </span>
                                         </form>
@@ -73,13 +83,13 @@
                                         <!--一级菜单-->
                                         <li id="tab_{$menu.tab}" class="{$menu.li_class}">
                                             <a href="{$menu.href}" class="{$menu.a_class}">
-                                            <neq name="menu.icon" value=""><i class="glyphicon glyphicon-{$menu.icon}"></i>
-                                            </neq>
-                                            {$menu.title}</a></li>
+                                                <neq name="menu.icon" value=""><i
+                                                        class="glyphicon glyphicon-{$menu.icon}"></i>
+                                                </neq>
+                                                {$menu.title}</a></li>
                                     </if>
 
                                 </switch>
-
 
 
                             </volist>

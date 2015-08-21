@@ -49,12 +49,15 @@
                 <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
                 <th class="">UID</th>
                 <th class="">昵称</th>
-                <th class="">积分</th>
+                <th class="">操作</th>
+                <!--<th class="">账号</th>-->
+                <!--<th class="">手机号</th>-->
+                <!--<th class="">邮箱</th>-->
                 <th class="">登录次数</th>
                 <th class="">最后登录时间</th>
                 <th class="">最后登录IP</th>
                 <th class="">状态</th>
-                <th class="">操作</th>
+
             </tr>
             </thead>
             <tbody>
@@ -64,13 +67,6 @@
                         <td><input class="ids" type="checkbox" name="id[]" value="{$vo.uid}"/></td>
                         <td>{$vo.uid}</td>
                         <td><a href="{:U('Admin/User/expandinfo_details',array('uid'=>$vo['uid']))}" >{$vo.nickname|op_t}</a></td>
-                        <td>{$vo.score}</td>
-                        <td>{$vo.login}</td>
-                        <td><span>{$vo.last_login_time|time_format}</span></td>
-                        <td><a href="http://ip138.com/ips138.asp?ip={$vo['last_login_ip']|long2ip}">{$vo['last_login_ip']|long2ip}</a>
-                        </td>
-                        <td>{$vo.status_text}</td>
-
                         <td>
                             <eq name="vo.status" value="1">
                                 <a href="{:U('User/changeStatus?method=forbidUser&id='.$vo['uid'])}"
@@ -85,6 +81,16 @@
                             <a href="{:U('User/initPass?id='.$vo['uid'])}"
                                class="confirm ajax-get">重置密码</a>
                         </td>
+
+
+
+                        <td>{$vo.login}</td>
+                        <td><span>{$vo.last_login_time|time_format}</span></td>
+                        <td><a href="http://ip138.com/ips138.asp?ip={$vo['last_login_ip']|long2ip}">{$vo['last_login_ip']|long2ip}</a>
+                        </td>
+                        <td>{$vo.status_text}</td>
+
+
 
                     </tr>
                 </volist>

@@ -10,6 +10,7 @@ var talker = {
     show: function () {
         var container = talker.container();
         if (container.text().trim() == '') {
+            toast.success('聊天发起成功。');
             toast.showLoading();
             $.get(U('Ucenter/Session/panel'), {},
                 function (html) {
@@ -27,9 +28,10 @@ var talker = {
      * @param uid
      */
     start_talk: function (uid) {
+
         $.post(U('Ucenter/Session/createTalk'), {uids: uid}, function (msg) {
             if (msg.status) {
-                toast.success('聊天发起成功。');
+                talker.show();
                 talker.open(msg.info.id);
                 /*在面板中加入一个项目*/
                 talker.prepend_session(msg.info);
@@ -92,21 +94,17 @@ var talker = {
      * @param id
      */
     exit: function (id) {
-        if (typeof (id) == 'undefined') {
-            id = parseInt($('#chat_id').val());
-        } else {
-        }
-        if(id==0){
-            toast.error('不能退出哦。');
-            return;
-        }
-        $.post(U('Ucenter/Message/doDeleteTalk'), {talk_id: id}, function (msg) {
-            if (msg.status) {
-                $('#chat_li_' + id).remove();
-                toast.success('成功退出聊天。', '聊天助手');
+            if (typeof (id) == 'undefined') {
+                id = $('#chat_id').val();
+            } else {
             }
+            $.post(U('Ucenter/Message/doDeleteTalk'), {talk_id: id}, function (msg) {
+                if (msg.status) {
+                    $('#chat_li_' + id).remove();
+                    toast.success('成功退出聊天。', '聊天助手');
+                }
 
-        }, 'json');
+            }, 'json');
     },
     /**
      * 绑定快速回复，ctrl+enter组合键
@@ -124,15 +122,8 @@ var talker = {
      */
     post_message: function () {
         var myDate = new Date();
-        var talk_id = parseInt($('#chat_id').val());
-        if (talk_id == 0) {
-            toast.error('发给谁呢？');
-            $('#chat_content').val('');
-            $('#chat_content').focus();
-            return;
-        }
         $.post(U('Ucenter/Message/postMessage'), {
-            talk_id: talk_id,
+            talk_id: $('#chat_id').val(),
             content: $('#chat_content').val()
         }, function (msg) {
             if (!msg.status) {
@@ -174,19 +165,19 @@ var talker = {
      * @param data
      */
     prepend_session: function (data) {
-        var tpl = ' <li id="chat_li_' + data.id + '">\
-            <a target="_blank" onclick="talker.open(' + data.id + ')"\
-        title="' + data.title + '">\
+        var tpl=' <li id="chat_li_'+data.id+'">\
+            <a target="_blank" onclick="talker.open('+data.id+')"\
+        title="'+data.title+'">\
         <div class="row">\
             <div class="col-md-4">\
-                <img src="' + data.icon + '"\
+                <img src="'+data.icon+'"\
                 class="avatar-img"\
                 style="width: 40px;max-width: 200%">\
                 </div>\
                 <div class="col-md-8" style="padding-left: 0">\
                     <div class="text-more talk-name" style="width: 90%">\
-                                               ' + data.title + '\
-                    </div><span class="btn-close" onclick="talker.exit(' + data.id + ')"><i\
+                                               '+data.title+'\
+                    </div><span class="btn-close" onclick="talker.exit('+data.id+')"><i\
                 title="退出聊天"\
                 class="icon-remove"></i></span>\
                 </div>\
@@ -195,7 +186,7 @@ var talker = {
         </li>';
 
 
-        $('#chat-list #chat_li_' + data.id).remove();
+        $('#chat-list #chat_li_'+data.id).remove();
         $('#chat-list').prepend(tpl);
         $('#friend_has_new').css('display', 'inline-block');
     },
@@ -241,6 +232,6 @@ var talker = {
 
 }
 
-$(function () {
+$(function(){
     talker.bind_ctrl_enter();//绑定
 })

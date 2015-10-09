@@ -71,11 +71,13 @@ class WeiboController extends AdminController
         $builder->title('微博基本设置')
             ->data($data)
             ->keySwitch('SHOW_TITLE', '是否在微博左侧显示等级')
+            ->keyBool('WEIBO_BR', '开启内容排版', '支持回车和空格')
             ->keySwitch('HIGH_LIGHT_AT', '高亮AT某人')
             ->keySwitch('HIGH_LIGHT_TOPIC', '高亮微博话题')
             ->keyText('WEIBO_INFO', '微博发布框左上内容')
             ->keyText('WEIBO_NUM', '微博字数限制')
-            ->keyText('HOT_LEFT', '热门微博取多少天以内的，以那天零点之后为准')->keyDefault('HOT_LEFT',3)
+
+            ->keyText('HOT_LEFT', '热门微博取多少天以内的，以那天零点之后为准')->keyDefault('HOT_LEFT', 3)
             ->keySwitch('CAN_IMAGE', '是否开启插入图片类型')
             ->keySwitch('CAN_TOPIC', '是否开启插入话题类型')
             ->keyRadio('COMMENT_ORDER', '微博评论列表顺序', '', array(0 => '时间倒序', 1 => '时间正序'))
@@ -88,7 +90,9 @@ class WeiboController extends AdminController
             ->keyText('USE_TOPIC', '常用话题', '显示在微博发布按钮左边，用‘,’分隔')
             ->keySwitch('NEWEST_USER', '最新用户开关')
             ->keyText('NEWEST_USER_COUNT', '最新用户显示数量', '')
-            ->group('基本设置', 'SHOW_TITLE,WEIBO_NUM,WEIBO_DEFAULT_TAB,HIGH_LIGHT_AT,HIGH_LIGHT_TOPIC,WEIBO_INFO,HOT_LEFT')
+
+            ->keyDefault('WEIBO_BR', 0)
+            ->group('基本设置', 'SHOW_TITLE,WEIBO_NUM,WEIBO_BR,WEIBO_DEFAULT_TAB,HIGH_LIGHT_AT,HIGH_LIGHT_TOPIC,WEIBO_INFO,HOT_LEFT')
             ->group('微博类型设置', 'CAN_IMAGE,CAN_TOPIC')
             ->group('微博评论设置', 'COMMENT_ORDER,SHOW_COMMENT')
             ->group('微博右侧设置', 'ACTIVE_USER,ACTIVE_USER_ORDER,ACTIVE_USER_COUNT,NEWEST_USER,NEWEST_USER_COUNT')
@@ -257,16 +261,15 @@ class WeiboController extends AdminController
 
     public function setCommentStatus($ids, $status)
     {
-        foreach($ids as $id){
+        foreach ($ids as $id) {
             $comemnt = D('Weibo/WeiboComment')->getComment($id);
-            if($status == 1){
+            if ($status == 1) {
                 D('Weibo/Weibo')->where(array('id' => $comemnt['weibo_id']))->setInc('comment_count');
-            }else{
+            } else {
                 D('Weibo/Weibo')->where(array('id' => $comemnt['weibo_id']))->setDec('comment_count');
             }
             S('weibo_' . $comemnt['weibo_id'], null);
         }
-
 
 
         $builder = new AdminListBuilder();

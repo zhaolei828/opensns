@@ -2,7 +2,7 @@
     <case value="today">
         <div class="check_rank ">
             <if condition="empty($rank)">
-                <div class="default text-center" style="padding: 10px 0;">虚位以待，赶紧签到。</div>
+                <div class="default text-center" style="padding: 10px 0;">{:L('nobody_checked')}</div>
                 <else/>
                 <ul class="check_rank_list">
                     <volist name="rank" id="v">
@@ -25,7 +25,7 @@
             </if>
             <div class="col-xs-12"  style="text-align:center;line-height:28px;border-top: 1px rgb(240, 240, 240) dashed;">
                 <a href="{:addons_url('CheckIn://CheckIn/ranking')}" style="padding: 0;color:rgb(51, 51, 51);">
-                    <span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;查看签到排行</a>
+                    <span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;{:L('check_rank')}</a>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -34,7 +34,7 @@
 
     <div class="check_rank ">
         <if condition="empty($rank)">
-            <div class="default text-center" style="padding: 10px 0;"> 虚位以待，赶紧签到。</div>
+            <div class="default text-center" style="padding: 10px 0;"> {:L('nobody_checked')}</div>
             <else/>
             <ul class="check_rank_list">
                 <volist name="rank" id="v">
@@ -56,7 +56,7 @@
                             </div>
 
                             <div class="pull-left">
-                                {$type_ch}{$type=='con'?$v['con_check']:$v['total_check']}天
+                                {$type_ch}{$type=='con'?$v['con_check']:$v['total_check']}{:L('day')}
                             </div>
                         </div>
                         <div class="col-xs-4">
@@ -69,7 +69,7 @@
         </if>
         <div class="col-xs-12" style="text-align:center;line-height: 28px;border-top: 1px rgb(240, 240, 240) dashed;">
             <a href="{:addons_url('CheckIn://CheckIn/ranking')}" style="padding: 0;color:rgb(51, 51, 51);">
-                <span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;查看签到排行</a>
+                <span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;{:L('check_rank')}</a>
         </div>
         <div class="clearfix"></div>
     </div>

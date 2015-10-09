@@ -625,6 +625,9 @@ class AdminConfigBuilder extends AdminBuilder
         $this->_keyList[] = $key;
         return $this;
     }
+    public function addCustomJs($script){
+        $this->assign('myJs',$script);
+    }
 
 
 

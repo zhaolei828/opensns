@@ -7,11 +7,11 @@
             <php>if(!$check){</php>
 
             <a href="javascript:void(0)" data-role="do_checkin" class="btn-sign"
-               style="color: red;font-weight: bolder;">签到</a>
+               style="color: red;font-weight: bolder;">{:L('checkin')}</a>
 
 
             <php>}else{</php>
-            <a href="javascript:void(0)" class="btn-sign">已签</a>
+            <a href="javascript:void(0)" class="btn-sign">{:L('checked')}</a>
             <php>}</php>
         </div>
 
@@ -25,9 +25,9 @@
     </div>
 </div>
 <div class="check-tab">
-    <div class="col-xs-4 text-center active" data-role="change_rank" data-type="today">今日抢签</div>
-    <div class="col-xs-4 text-center" data-role="change_rank" data-type="con">连签</div>
-    <div class="col-xs-4 text-center" data-role="change_rank" data-type="total">累签</div>
+    <div class="col-xs-4 text-center active" data-role="change_rank" data-type="today">{:L('today_checked')}</div>
+    <div class="col-xs-4 text-center" data-role="change_rank" data-type="con">{:L('con_checked')}</div>
+    <div class="col-xs-4 text-center" data-role="change_rank" data-type="total">{:L('total_checked')}</div>
 </div>
 <div class="clearfix"></div>
 <div id="rank-list" style="margin-bottom: 15px;">

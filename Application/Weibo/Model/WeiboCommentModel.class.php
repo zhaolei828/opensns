@@ -65,10 +65,11 @@ class WeiboCommentModel extends Model
         if (!$comment) {
             $comment = $this->find($id);
             $comment['content'] = $this->parseComment($comment['content']);
-            $comment['user'] = query_user(array('uid', 'nickname', 'avatar32', 'avatar64', 'avatar128', 'avatar256', 'avatar512', 'space_url', 'rank_link', 'score', 'title', 'weibocount', 'fans', 'following'), $comment['uid']);
             S('weibo_comment_' . $id, $comment);
         }
+        $comment['content']= parse_at_users( $comment['content'], true);;
         $comment['can_delete'] = check_auth('Weibo/Index/doDelComment', $comment['uid']);
+        $comment['user'] = query_user(array('uid', 'nickname', 'avatar32', 'avatar64', 'avatar128', 'avatar256', 'avatar512', 'space_url', 'rank_link', 'score', 'title', 'weibocount', 'fans', 'following'), $comment['uid']);
         return $comment;
 
     }
@@ -80,7 +81,6 @@ class WeiboCommentModel extends Model
         $content = parse_url_link($content);
 
         $content = parse_expression($content);
-        $content = parse_at_users($content,true);
 
 //        $content = parseWeiboContent($content);
         return $content;

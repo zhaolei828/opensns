@@ -830,7 +830,7 @@ class RoleController extends AdminController
 
             //获取头衔列表
             $model = D('Rank');
-            $list = $model->field('id,uid,title,logo,create_time,types')->select();
+            $list = $model->select();
             $canApply = $unApply = array();
             foreach ($list as $val) {
                 $val['name'] = query_user(array('nickname'), $val['uid']);

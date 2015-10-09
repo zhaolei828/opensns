@@ -16,10 +16,10 @@ class SessionController extends BaseController
     protected $mTalkModel;
 
     public function _initialize()
-{
-    parent::_initialize();
-    $this->mTalkModel = D('Talk');
-}
+    {
+        parent::_initialize();
+        $this->mTalkModel = D('Talk');
+    }
 
     public function getSession($id)
     {
@@ -35,8 +35,7 @@ class SessionController extends BaseController
             }
         }
         $map['talk_id'] = $talk['id'];
-        D('TalkPush')->where(array('uid' => get_uid(), 'source_id' => $id))->setField('status', -1);
-        D('TalkMessagePush')->where(array('uid' => get_uid(), 'talk_id' => $id))->setField('status', -1);
+        D('Common/TalkPush')->clearAll();
         $messages = D('TalkMessage')->where($map)->order('create_time desc')->limit(20)->select();
         $messages = array_reverse($messages);
         foreach ($messages as &$mes) {
@@ -53,7 +52,7 @@ class SessionController extends BaseController
     }
 
     /**消息页面
-     * @param int    $page
+     * @param int $page
      * @param string $tab 当前tab
      */
     public function message($page = 1, $tab = 'unread')
@@ -146,8 +145,8 @@ class SessionController extends BaseController
         $uids = explode(',', $talk['uids']);
         if (count($uids) <= 2) {
             $this->mTalkModel->where(array('id' => $talk_id))->setField('status', -1);
-            M('talk_message_push')->where(array('talk_id'=>$talk_id))->delete();
-            M('talk_push')->where(array('source_id'=>$talk_id))->delete();
+            M('talk_message_push')->where(array('talk_id' => $talk_id))->delete();
+            M('talk_push')->where(array('source_id' => $talk_id))->delete();
             /*D('Message')->where(array('talk_id' => $talk_id))->setField('talk_id', 0);*/
         } //如果删除前聊天中有多个人，就退出聊天。
         else {

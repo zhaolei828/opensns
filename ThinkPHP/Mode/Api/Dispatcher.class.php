@@ -171,7 +171,7 @@ class Dispatcher {
             if(is_file(MODULE_PATH.'Common/function.php'))
                 include MODULE_PATH.'Common/function.php';
         }else{
-            E(L('_MODULE_NOT_EXIST_').':'.MODULE_NAME);
+            E(L('_MODULE_NOT_EXIST_').':'.MODULE_NAME,815);
         }
 
         if('' != $_SERVER['PATH_INFO'] ){

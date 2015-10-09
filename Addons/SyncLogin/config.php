@@ -1,6 +1,17 @@
 <?php
 
 return array(
+    'role'=>array(               //配置在表单中的键名 ,这个会是config[recommendUser]
+        'title'=>'设置初始身份:',           //表单的文字
+        'type'=>'text',                   //表单的类型：text、textarea、checkbox、radio、select等
+        'options'=>array(                  //select 和radion、checkbox的子选项
+            'value'=>'',
+
+        ),
+        'value'=>'1',
+        'tip'=>'输入初始身份的ID',                     //表单的默认值
+    ),
+
     'type'=>array(
         'title'=>'开启同步登陆：',
         'type'=>'checkbox',
@@ -88,7 +99,7 @@ return array(
 
             )
         )
-    )
+    ),
 
 
 

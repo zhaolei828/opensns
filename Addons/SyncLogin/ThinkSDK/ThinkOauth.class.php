@@ -129,8 +129,13 @@ abstract class ThinkOauth{
 	 * 初始化配置
 	 */
 	public  function config(){
-
-            $this->Callback = "http://".$_SERVER['HTTP_HOST'].addons_url('SyncLogin://Base/callback',array('type'=>strtolower($this->Type)));
+        $addons_url =addons_url('SyncLogin://Base/callback',array('type'=>strtolower($this->Type)));
+            if(strpos($addons_url,'index.php') === false){
+            $qshurl = $_SERVER['HTTP_HOST']."/index.php?s=";
+        }else{
+            $qshurl = $_SERVER['HTTP_HOST'];
+        }
+        $this->Callback = "http://".$qshurl.$addons_url;
 
 /*		$config = C("THINK_SDK_{$this->Type}");
 		if(!empty($config['AUTHORIZE']))

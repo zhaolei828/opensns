@@ -1,9 +1,9 @@
 <include file="Public/right_chat_panel"/>
 <php> D('Common/Member')->need_login();</php>
 <!--[if lt IE 8]>
-<div class="alert alert-danger" style="margin-bottom: 0">您正在使用 <strong>过时的</strong> 浏览器. 是时候 <a target="_blank"
-                                                                                                href="http://browsehappy.com/">更换一个更好的浏览器</a>
-    来提升用户体验.
+<div class="alert alert-danger" style="margin-bottom: 0">{:L('tip_browser_deprecated_1')} <strong>{:L('tip_browser_deprecated_2')}</strong> {:L('tip_browser_deprecated_3')} <a target="_blank"
+                                                                                                href="http://browsehappy.com/">{:L('tip_browser_deprecated_4')}</a>
+    {:L('tip_browser_deprecated_5')}
 </div>
 <![endif]-->
 
@@ -49,7 +49,8 @@
                                 <a title="{$nav.title}" href="{$nav.url|get_nav_url}"
                                    target="<eq name='nav.target' value='1'>_blank<else/>_self</eq>"><i
                                         class="icon-{$nav.icon} app-icon "></i>
-                                    <span>{$nav.title}</span>
+                                    <span style="color:{$nav.color}">{$nav.title}</span>
+                                    <span class="label label-badge rank-label" title="{$nav.band_text}" style="background: {$nav.band_color} !important;color:white !important;">{$nav.band_text}</span>
                                 </a>
                             </li>
                         </neq>
@@ -75,7 +76,7 @@
                                 ></i>
                             </a>
                     <else/>
-                        <a onclick="toast.error('请登陆后使用好友面板。')"> <i class="icon-chat-dot"> </i>
+                        <a onclick="toast.error({:L('panel_limit')})"> <i class="icon-chat-dot"> </i>
                         </a>
                     </if>
                     </li>
@@ -94,7 +95,7 @@
                                 <li>
                                     <div class="clearfix header">
                                         <div class="col-xs-6 nav_align_left"><span
-                                                id="nav_hint_count">{:count($unreadMessage)}</span> 条未读
+                                                id="nav_hint_count">{:count($unreadMessage)}</span> {:L('unread')}
                                         </div>
                                     </div>
                                 </li>
@@ -104,7 +105,7 @@
                                             style="width: auto;">
                                             <if condition="count($unreadMessage) eq 0">
                                                 <div style="font-size: 18px;color: #ccc;font-weight: normal;text-align: center;line-height: 150px">
-                                                    暂无任何消息!
+                                                    {:L('no_message')}
                                                 </div>
                                                 <else/>
                                                 <volist name="unreadMessage" id="message">
@@ -130,17 +131,17 @@
                                 <li class="footer text-right">
                                     <div class="btn-group">
                                         <button onclick="Notify.setAllReaded()" class="btn btn-sm  "><i
-                                                class="icon-check"></i> 全部已读
+                                                class="icon-check"></i> {:L('all_has_read')}
                                         </button>
                                         <a class="btn  btn-sm  " href="{:U('ucenter/Message/message')}">
-                                            查看消息
+                                            {:L('view_news')}
                                         </a>
                                     </div>
                                 </li>
                             </ul>
                         </li>
                         <li>
-                            <a title="修改资料" href="{:U('ucenter/Config/index')}"><i
+                            <a title="{:L('edit_info')}" href="{:U('ucenter/Config/index')}"><i
                                     class="icon-cog"></i></a>
                         </li>
                         <li class="top_spliter"></li>
@@ -154,17 +155,17 @@
                             </a>
                             <ul class="dropdown-menu text-left" role="menu">
                                 <li><a href="{:U('ucenter/Index/index')}"><span
-                                        class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;个人主页</a>
+                                        class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{:L('home_page')}</a>
                                 </li>
                                 <li><a href="{:U('ucenter/message/message')}"><span
-                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;消息中心</a>
+                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;{:L('message_center')}</a>
                                 </li>
                                 <li><a href="{:U('ucenter/Collection/index')}"><span
-                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;我的收藏</a>
+                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;{:L('my_favorites')}</a>
                                 </li>
 
                                 <li><a href="{:U('ucenter/Index/rank')}"><span
-                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;我的头衔</a>
+                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;{:L('my_title')}</a>
                                 </li>
                                 <php>
                                     $register_type=modC('REGISTER_TYPE','normal','Invite');
@@ -172,17 +173,17 @@
                                     if(in_array('invite',$register_type)){
                                 </php>
                                 <li><a href="{:U('ucenter/Invite/invite')}"><span
-                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;邀请好友</a>
+                                        class="glyphicon glyphicon-star"></span>&nbsp;&nbsp;{:L('invite_friends')}</a>
                                 </li>
                                 <php>}</php>
 
                                 {:hook('personalMenus')}
                                 <if condition="check_auth('Admin/Index/index')">
                                     <li><a href="{:U('Admin/Index/index')}" target="_blank"><span
-                                            class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp;管理后台</a></li>
+                                            class="glyphicon glyphicon-dashboard"></span>&nbsp;&nbsp;{:L('manage_background')}</a></li>
                                 </if>
                                 <li><a event-node="logout"><span
-                                        class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;注销</a>
+                                        class="glyphicon glyphicon-off"></span>&nbsp;&nbsp;{:L('logout')}</a>
                                 </li>
                             </ul>
                         </li>
@@ -205,10 +206,10 @@
                             var ONLY_OPEN_REGISTER = "{$only_open_register}";
                         </script>
                         <li class="">
-                            <a data-login="do_login">登录</a>
+                            <a data-login="do_login">{:L('login')}</a>
                         </li>
                         <li class="">
-                            <a data-role="do_register" data-url="{:U('Ucenter/Member/register')}">注册</a>
+                            <a data-role="do_register" data-url="{:U('Ucenter/Member/register')}">{:L('register')}</a>
                         </li>
                         <li class="spliter "></li>
 
@@ -229,8 +230,8 @@
 <php>
     if(is_login()&&(get_login_role_audit()==2||get_login_role_audit()==0)){
 </php>
-<div id="top-role-tip" class="alert alert-danger" style="margin-top: 65px;margin-bottom: -50px;">您当前登录的 <strong>角色</strong>还未通过审核或被禁用。
-    <a target="_blank" href="{:U('ucenter/config/role')}">更换其它角色登录</a>
+<div id="top-role-tip" class="alert alert-danger" style="margin-top: 65px;margin-bottom: -50px;">{:L('tip_role_not_audited1')} <strong>{:L('tip_role_not_audited2')}</strong>{:L('tip_role_not_audited3')}
+    <a target="_blank" href="{:U('ucenter/config/role')}">{:L('tip_role_not_audited4')}</a>
 </div>
 <script>
     $(function(){

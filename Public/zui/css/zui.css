@@ -736,7 +736,7 @@ fieldset {
   border: 0;
 }
 textarea {
-  resize: vertical;
+  resize: none;
 }
 ol,
 ul {
@@ -4592,7 +4592,7 @@ fieldset[disabled] .form-control {
   background-color: #e5e5e5;
 }
 textarea.form-control {
-  height: auto;
+  height: 52px;
 }
 .form-group {
   margin-bottom: 15px;

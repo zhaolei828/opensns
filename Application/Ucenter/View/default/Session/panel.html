@@ -1,22 +1,22 @@
 <div id="right_panel" class="friend_panel visible-xs visible-lg">
-        <div id="right_panel_main">
-           <include file="friend_panel"/>
-        </div>
+    <div id="right_panel_main">
+        <include file="friend_panel"/>
+    </div>
 </div>
 <!--开始聊天板-->
 <div id="chat_box" class="row chat_panel weibo_post_box">
 
     <div class="col-xs-5">
-       <!-- <div class="chat-left row">
-            <div class="input-group search-friend">
-                <span class="input-group-addon">@</span>
-                <input type="text" class="form-control" placeholder="用户名">
-                <span class="input-group-addon"><i class="icon icon-search"></i></span>
-            </div>
-        </div>-->
+        <!-- <div class="chat-left row">
+             <div class="input-group search-friend">
+                 <span class="input-group-addon">@</span>
+                 <input type="text" class="form-control" placeholder="用户名">
+                 <span class="input-group-addon"><i class="icon icon-search"></i></span>
+             </div>
+         </div>-->
         <div class="row">
             <script>
-               $(function(){
+                $(function () {
                     $('#scrollArea_session').slimScroll({
                         height: '405px',
                         alwaysVisible: false
@@ -25,10 +25,11 @@
             </script>
             <php>
                 $currentSession=D('Common/Talk')->getCurrentSessions();
+                D('Common/TalkPush')->clearAll();
             </php>
             <if condition="count($currentSession) neq 0">
                 <script>
-                    $(function(){
+                    $(function () {
                         talker.open("{$currentSession.0.id}");
                     })
                 </script>
@@ -64,7 +65,8 @@
         </div>
     </div>
     <div class="col-xs-7 chat-board">
-        <div class="panel_title row"><img id="chat_ico" class="chat_avatar avatar-img" src="__PUBLIC__/images/coffee.png">
+        <div class="panel_title row"><img id="chat_ico" class="chat_avatar avatar-img"
+                                          src="__PUBLIC__/images/coffee.png">
 
             <div id="chat_title" class="title pull-left text-more"></div>
             <div class="control_btns pull-right"><a><i onclick="$('#talker').hide();"

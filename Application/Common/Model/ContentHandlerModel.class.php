@@ -55,6 +55,7 @@ class ContentHandlerModel
         $content = filter_base64($content);
         //检测图片src是否为图片并进行过滤
         $content = filter_image($content);
+        hook('filterHtmlContent', array('content' => &$content));
         return $content;
     }
 

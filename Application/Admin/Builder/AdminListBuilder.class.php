@@ -246,7 +246,7 @@ class AdminListBuilder extends AdminBuilder
 
         if (empty($type) && $type = 'text') {
             $this->_search[] = array('title' => $title, 'name' => $name, 'type' => $type, 'des' => $des, 'attr' => $attr);
-            $this->setSearchPostUrl('');
+//            $this->setSearchPostUrl('');
         } else {
             if (empty($arrdb)) {
                 $this->_search[] = array('title' => $title, 'name' => $name, 'type' => $type, 'des' => $des, 'attr' => $attr, 'field' => $field, 'table' => $table, 'arrvalue' => $arrvalue);

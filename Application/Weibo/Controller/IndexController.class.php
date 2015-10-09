@@ -447,6 +447,7 @@ class IndexController extends BaseController
         $cover = $model->findData($map);
         $self['cover_id'] = $cover['value'];
         $self['cover_path'] = getThumbImageById($cover['value'], 273, 80);
+
         $this->assign('self', $self);
     }
 

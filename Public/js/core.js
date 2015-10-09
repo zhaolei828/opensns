@@ -179,10 +179,12 @@ function bindGoTop() {
 function bindMessageChecker() {
     $hint_count = $('#nav_hint_count');
     $nav_bandage_count = $('#nav_bandage_count');
+    if(Config.GET_INFORMATION){
+        setInterval(function () {
+            checkMessage();
+        }, Config.GET_INFORMATION_INTERNAL);
+    }
 
-    setInterval(function () {
-        checkMessage();
-    }, 10000);
 }
 
 function play_bubble_sound() {

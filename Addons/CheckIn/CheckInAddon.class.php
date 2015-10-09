@@ -88,6 +88,10 @@ SQL
             $rank = $model->getRank($type);
             S('check_rank_' . $type . '_' . $time, $rank, 300);
         }
+        foreach($rank as &$v){
+            $v['user'] = query_user(array('avatar32','avatar64','space_url', 'nickname', 'uid',), $v['uid']);
+        }
+        unset($v);
         $this->assign('rank', $rank);
         $this->assign('type', $type);
         $this->assign('type_ch', $type == 'con' ? '连签' : '累签');

@@ -29,7 +29,7 @@
                         $(function () {
                             $('#upgrade_' + '{$vo.uid}').tooltip({
                                         html: true,
-                                        title: '当前阶段：{$vo.title} <br/>下一阶段：{$vo.level.next}<br/>现有：{$vo.score}<br/>需要：{$vo.level.upgrade_require}<br/>剩余需要： {$vo.level.left}<br/>升级进度：{$vo.level.percent}% <br/> '
+                                        title: '{:L("current_stage")}：{$vo.title} <br/>{:L("next_stage")}：{$vo.level.next}<br/>{:L("now")}：{$vo.score}<br/>{:L("need")}：{$vo.level.upgrade_require}<br/>{:("remain")}{:("need")}： {$vo.level.left}<br/>{:("lv_up_progress")}：{$vo.level.percent}% <br/> '
                                     }
                             );
                         })
@@ -47,11 +47,11 @@
                 <div class="clearfix user-data">
 
                     <div class="col-xs-4 text-center">
-                        <a href="{:U('Ucenter/index/fans',array('uid'=>$vo['uid']))}" title="粉丝数">{$vo.fans}</a><br>粉丝
+                        <a href="{:U('Ucenter/index/fans',array('uid'=>$vo['uid']))}" title="{:L('fans')}{:L('number')}">{$vo.fans}</a><br>{:L('fans')}
                     </div>
                     <div class="col-xs-4 text-center">
                         <a href="{:U('Ucenter/index/following',array('uid'=>$vo['uid']))}"
-                           title="关注数">{$vo.following}</a><br>关注
+                           title="{:L('followers')}{:L('number')}">{$vo.following}</a><br>{:L('followers')}
                     </div>
                     <div class="col-xs-4 text-center">
                         <if condition="is_login() && $vo['uid'] != get_uid()">
@@ -62,7 +62,7 @@
                             <if condition="$vo['uid'] == get_uid()">
                                 <p class="text-center">
                                     <a class="" disabled="disabled" style="  line-height: 40px;">
-                                        自己
+                                        {:L('self')}
                                     </a>
                                 </p>
                             </if>

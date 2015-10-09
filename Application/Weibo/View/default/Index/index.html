@@ -49,11 +49,11 @@
                 <volist name="tab_config" id="tab">
                     <a id="{$tab}" href="{:U('Weibo/Index/index',array('type'=>$tab))}">
                         <php>if($tab == 'concerned'){</php>
-                        我的关注
+                        {:L('my_following')}
                         <php>}elseif($tab == 'hot'){</php>
-                        热门{$MODULE_ALIAS}
+                        {:L('hot')}{$MODULE_ALIAS}
                         <php>}else{</php>
-                        全站{$MODULE_ALIAS}
+                        {:L('all_website')}{$MODULE_ALIAS}
                         <php>}</php>
                     </a>
                 </volist>
@@ -84,7 +84,7 @@
         <div id="load_more" class="text-center text-muted"
         <if condition="$page neq 1">style="display:none"</if>
         >
-        <p id="load_more_text">载入更多</p>
+        <p id="load_more_text">{:L('load_more')}</p>
     </div>
     <div id="index_weibo_page" style=" <if condition='$page eq 1'>display:none</if>">
         <div class="text-right">
@@ -98,7 +98,7 @@
     <div class="weibo_right" style="width: 280px">
         <!--登录后显示个人区域-->
         <if condition="is_login()">
-            <div class="user-card">
+            <div class="user-card" style="height: auto;">
                 <div>
                     <div class="top_self">
                         <if condition="$self['cover_id']">
@@ -108,7 +108,7 @@
                         </if>
                         <if condition="is_login() && $self['uid'] eq is_login()">
                             <div class="change_cover"><a data-type="ajax" data-url="{:U('Ucenter/Public/changeCover')}"
-                                                         data-toggle="modal" data-title="上传个人封面" style="color: white;"><img
+                                                         data-toggle="modal" data-title="{:L('upload_cover')}" style="color: white;"><img
                                     class="img-responsive" src="__CORE_IMAGE__/fractional.png" style="width: 25px;"></a>
                             </div>
                         </if>
@@ -126,10 +126,10 @@
                                 <div class="col-xs-12" style="text-align: center">
                         <span class="nickname">
                             {$self.title}
-                        <a ucard="{$self.user.uid}" href="{$self.space_url}" class="user_name">{$self.nickname|htmlspecialchars}</a>
-                            {:W('Common/UserRank/render',array($self['uid']))}
+                        <a ucard="{$self.uid}" href="{$self.space_url}" class="user_name">{$self.nickname|htmlspecialchars}</a>
 
                             </span>
+                                    <br/>{:W('Common/UserRank/render',array($self['uid']))}
                                 </div>
                             </div>
                             <php>
@@ -139,7 +139,7 @@
                                 $(function () {
                                     $('#upgrade').tooltip({
                                                 html: true,
-                                                title: '当前阶段：{$self.title} <br/>下一阶段：{$title.next}<br/>现有：{$self.score}<br/>需要：{$title.upgrade_require}<br/>剩余需要： {$title.left}<br/>升级进度：{$title.percent}% <br/> '
+                                                title: '{:L("current_level")}：{$self.title} <br/>{:L("next_level")}：{$title.next}<br/>{:L("now")}：{$self.score}<br/>{:L("need")}：{$title.upgrade_require}<br/>{:L("last")}： {$title.left}<br/>{:L("progress")}：{$title.percent}% <br/> '
                                             }
                                     );
                                 })
@@ -160,10 +160,10 @@
                                    title="{$MODULE_ALIAS}数">{$self.weibocount}</a><br>{$MODULE_ALIAS}
                             </div>
                             <div class="col-xs-4 text-center">
-                                <a href="{:U('Ucenter/index/fans',array('uid'=>$self['uid']))}" title="粉丝数">{$self.fans}</a><br>粉丝
+                                <a href="{:U('Ucenter/index/fans',array('uid'=>$self['uid']))}" title="{:L('fans_count')}">{$self.fans}</a><br>{:L('fans')}
                             </div>
                             <div class="col-xs-4 text-center">
-                                <a href="{:U('Ucenter/index/following',array('uid'=>$self['uid']))}" title="关注数">{$self.following}</a><br>关注
+                                <a href="{:U('Ucenter/index/following',array('uid'=>$self['uid']))}" title="{:L('following_count')}">{$self.following}</a><br>{:L('follow')}
                             </div>
                         </div>
 
@@ -186,10 +186,10 @@
 
             <if condition="modC('ACTIVE_USER',1)">
                 {:W('TopUserList/lists',array(null,'score'.modC('ACTIVE_USER_ORDER',1).'
-                desc','活跃用户','top',modC('ACTIVE_USER_COUNT',6)))}
+                desc',L('active_user'),'top',modC('ACTIVE_USER_COUNT',6)))}
             </if>
             <if condition="modC('NEWEST_USER',1)">
-                {:W('UserList/lists',array(null,'id desc','最新加入','new',modC('NEWEST_USER_COUNT',6)))}
+                {:W('UserList/lists',array(null,'id desc',L('last_register'),'new',modC('NEWEST_USER_COUNT',6)))}
             </if>
         </div>
     </div>

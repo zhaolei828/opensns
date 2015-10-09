@@ -19,22 +19,21 @@ class UserListWidget extends Action
 {
 
     /* 显示指定分类的同级分类或子分类列表 */
-    public function lists($map = '', $order = 'id desc',$title='最新加入',$tag='',$limit=6)
+    public function lists($map = '', $order = 'id desc', $title = '最新加入', $tag = '', $limit = 6)
     {
-        $users = S('weibo_latest_user_'.$tag);
+        $users = S('weibo_latest_user_' . $tag);
         if (empty($users)) {
             $fields = 'id';
-            $map['status']=1;
-            $user = D('ucenter_member')->where($map)->field($fields)->order($order)->limit($limit)->select();
-            foreach ($user as &$uid) {
-                $uid['user'] = query_user(array('avatar64', 'nickname', 'space_url', 'space_link'), $uid['id']);
-            }
-            unset($uid);
-            $users = $user;
-            S('weibo_latest_user_'.$tag, $users, 300);
+            $map['status'] = 1;
+            $users = D('ucenter_member')->where($map)->field($fields)->order($order)->limit($limit)->select();
+            S('weibo_latest_user_' . $tag, $users, 300);
         }
+        foreach ($users as &$v) {
+            $v['user'] = query_user(array('avatar64', 'nickname', 'space_url', 'space_link'), $v['id']);
+        }
+        unset($v);
         $this->assign('user', $users);
-        $this->assign('title',$title);
+        $this->assign('title', $title);
         $this->display('Widget/userList');
     }
 

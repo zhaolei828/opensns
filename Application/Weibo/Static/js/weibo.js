@@ -72,17 +72,19 @@ var bind_weibo_popup = function () {
             type: 'image',
             tLoading: '正在载入 #%curr%...',
             mainClass: 'mfp-img-mobile',
+
             gallery: {
                 enabled: true,
                 navigateByImgClick: true,
                 preload: [0, 1]
             },
             image: {
+
                 tError: '<a href="%url%">图片 #%curr%</a> 无法被载入.',
                 titleSrc: function (item) {
                     return '';
                 },
-                verticalFit: true
+                verticalFit: false
             }
         });
     });
@@ -302,7 +304,7 @@ var do_comment = function () {
         var weiboCommentList = $('.weibo-comment-list', weibo);
         var originalButtonText = commitButton.text();
         commitButton.text('正在发表...').addClass('disabled');
-        var weiboToCommentId = $('#weibo-comment-to-comment-id', weibo);
+        var weiboToCommentId = $('[name="reply_id"]', weibo);
         var comment_id = weiboToCommentId.val();
         $.post(url, {weibo_id: weiboId, content: content, comment_id: comment_id}, function (a) {
             handleAjax(a);
@@ -417,7 +419,6 @@ var bind_repost =  function () {
         type: 'ajax',
         overflowY: 'scroll',
         modal: true,
-
         callbacks: {
             ajaxContentAdded: function () {
                 // Ajax content is loaded and appended to DOM
@@ -437,7 +438,7 @@ $(function(){
         atwho_config = {
             at: "@",
             data: res,
-            tpl: "<li data-value='@${nickname}'><img class='avatar-img' style='width:2em;margin-right: 0.6em' src='${avatar32}'/>${nickname}</li>",
+            tpl: "<li data-value='[at:${id}]'><img class='avatar-img' style='width:2em;margin-right: 0.6em' src='${avatar32}'/>${nickname}</li>",
             show_the_at: true,
             search_key: 'search_key',
             start_with_space: false

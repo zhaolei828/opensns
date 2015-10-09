@@ -176,29 +176,29 @@ class UserController extends AdminController
                     $data_score[$key] = $val;
                 }
             }
-            unset($key,$val);
+            unset($key, $val);
             $res = D('Member')->where(array('uid' => $data['id']))->save($data_score);
             foreach ($data_score as $key => $val) {
-                $value = query_user(array($key),$data['id']);
-                if($val == $value[$key]){
+                $value = query_user(array($key), $data['id']);
+                if ($val == $value[$key]) {
                     continue;
                 }
-                D('Ucenter/Score')->addScoreLog($data['id'],cut_str('score',$key,'l'),'to' , $val ,'',0,get_nickname(is_login()).'后台调整');
-                D('Ucenter/Score')->cleanUserCache($data['id'],cut_str('score',$key,'l'));
+                D('Ucenter/Score')->addScoreLog($data['id'], cut_str('score', $key, 'l'), 'to', $val, '', 0, get_nickname(is_login()) . '后台调整');
+                D('Ucenter/Score')->cleanUserCache($data['id'], cut_str('score', $key, 'l'));
             }
-            unset($key,$val);
+            unset($key, $val);
             /* 修改积分 end*/
             /*身份设置 zzl(郑钟良)*/
-            $data_role=array();
+            $data_role = array();
             foreach ($data as $key => $val) {
-                if ( $key == 'role') {
-                    $data_role = explode(',',$val);
-                }else if (substr($key, 0, 4) == 'role') {
+                if ($key == 'role') {
+                    $data_role = explode(',', $val);
+                } else if (substr($key, 0, 4) == 'role') {
                     $data_role[] = $val;
                 }
             }
-            unset($key,$val);
-            $this->_resetUserRole($uid,$data_role);
+            unset($key, $val);
+            $this->_resetUserRole($uid, $data_role);
             $this->success('操作成功！');
             /*身份设置 end*/
         } else {
@@ -248,37 +248,42 @@ class UserController extends AdminController
             $builder->data($member);
 
             /*身份设置 zzl(郑钟良)*/
-            $already_role=D('UserRole')->where(array('uid'=>$uid,'status'=>1))->field('role_id')->select();
-            if(count($already_role)){
-                $already_role=array_column($already_role,'role_id');
+            $already_role = D('UserRole')->where(array('uid' => $uid, 'status' => 1))->field('role_id')->select();
+            if (count($already_role)) {
+                $already_role = array_column($already_role, 'role_id');
             }
-            $roleModel=D('Role');
-            $role_key=array();
-            $no_group_role=$roleModel->where(array('group_id'=>0,'status'=>1))->select();
-            if(count($no_group_role)){
-                $role_key[]='role';
-                $no_group_role_options=$already_no_group_role=array();
-                foreach($no_group_role as $val){
-                    if(in_array($val['id'],$already_role)){
-                        $already_no_group_role[]=$val['id'];
+            $roleModel = D('Role');
+            $role_key = array();
+            $no_group_role = $roleModel->where(array('group_id' => 0, 'status' => 1))->select();
+            if (count($no_group_role)) {
+                $role_key[] = 'role';
+                $no_group_role_options = $already_no_group_role = array();
+                foreach ($no_group_role as $val) {
+                    if (in_array($val['id'], $already_role)) {
+                        $already_no_group_role[] = $val['id'];
                     }
-                    $no_group_role_options[$val['id']]=$val['title'];
+                    $no_group_role_options[$val['id']] = $val['title'];
                 }
-                $builder->keyCheckBox('role','无分组身份','可以多选',$no_group_role_options)->keyDefault('role',implode(',',$already_no_group_role));
+                $builder->keyCheckBox('role', '无分组身份', '可以多选', $no_group_role_options)->keyDefault('role', implode(',', $already_no_group_role));
             }
-            $role_group=D('RoleGroup')->select();
-            foreach($role_group as $group){
-                $group_role=$roleModel->where(array('group_id'=>$group['id'],'status'=>1))->select();
-                if(count($group_role)){
-                    $role_key[]='role'.$group['id'];
-                    $group_role_options=$already_group_role=array();
-                    foreach($group_role as $val){
-                        if(in_array($val['id'],$already_role)){
-                            $already_group_role=$val['id'];
+            $role_group = D('RoleGroup')->select();
+            foreach ($role_group as $group) {
+                $group_role = $roleModel->where(array('group_id' => $group['id'], 'status' => 1))->select();
+                if (count($group_role)) {
+                    $role_key[] = 'role' . $group['id'];
+                    $group_role_options = $already_group_role = array();
+                    foreach ($group_role as $val) {
+                        if (in_array($val['id'], $already_role)) {
+                            $already_group_role = $val['id'];
                         }
-                        $group_role_options[$val['id']]=$val['title'];
+                        $group_role_options[$val['id']] = $val['title'];
                     }
-                    $builder->keyRadio('role'.$group['id'],'分组['.$group['title'].']身份','同一分组下用户最多只能拥有其中一个身份',$group_role_options)->keyDefault('role'.$group['id'],$already_group_role);
+                    $myJs = "$('.group_list').last().children().last().append('<a class=\"btn btn-default\" id=\"checkFalse\">取消选择</a>');";
+                    $myJs = $myJs."$('#checkFalse').click(";
+                    $myJs = $myJs."function(){ $('input[type=\"radio\"]').attr(\"checked\",false)}";
+                    $myJs = $myJs.");";
+
+                    $builder->keyRadio('role' . $group['id'], '分组[' . $group['title'] . ']身份', '同一分组下用户最多只能拥有其中一个身份', $group_role_options)->keyDefault('role' . $group['id'], $already_group_role)->addCustomJs($myJs);
                 }
             }
             /*身份设置 end*/
@@ -300,43 +305,43 @@ class UserController extends AdminController
      * @return bool
      * @author 郑钟良<zzl@ourstu.com>
      */
-    private function _resetUserRole($uid=0,$haveRole=array())
+    private function _resetUserRole($uid = 0, $haveRole = array())
     {
-        $userRoleModel=D('UserRole');
-        $memberModel=D('Common/Member');
-        $map['uid']=$uid;
-        foreach($haveRole as $val){
-            $map['role_id']=$val;
-            $userRole=$userRoleModel->where($map)->find();
-            if($userRole){
-                if(!$userRole['init']){
-                    $memberModel->initUserRoleInfo($val,$uid);
+        $userRoleModel = D('UserRole');
+        $memberModel = D('Common/Member');
+        $map['uid'] = $uid;
+        foreach ($haveRole as $val) {
+            $map['role_id'] = $val;
+            $userRole = $userRoleModel->where($map)->find();
+            if ($userRole) {
+                if (!$userRole['init']) {
+                    $memberModel->initUserRoleInfo($val, $uid);
                 }
-                if($userRole['status']!=1){
+                if ($userRole['status'] != 1) {
                     $userRoleModel->where($map)->setField('status', 1);
                 }
-            }else{
-                $data=$map;
-                $data['status']=1;
-                $data['step']='start';
-                $data['init']=1;
-                $res=$userRoleModel->add($data);
-                if($res){
-                    $memberModel->initUserRoleInfo($val,$uid);
+            } else {
+                $data = $map;
+                $data['status'] = 1;
+                $data['step'] = 'start';
+                $data['init'] = 1;
+                $res = $userRoleModel->add($data);
+                if ($res) {
+                    $memberModel->initUserRoleInfo($val, $uid);
                 }
             }
         }
-        $map_remove['uid']=$uid;
-        $map_remove['role_id']=array('not in',$haveRole);
+        $map_remove['uid'] = $uid;
+        $map_remove['role_id'] = array('not in', $haveRole);
         $userRoleModel->where($map_remove)->setField('status', -1);
-        $user_info=$memberModel->where(array('uid'=>$uid))->find();
-        if(!in_array($user_info['show_role'],$haveRole)){
-            $user_data['show_role']=$haveRole[count($haveRole)-1];
+        $user_info = $memberModel->where(array('uid' => $uid))->find();
+        if (!in_array($user_info['show_role'], $haveRole)) {
+            $user_data['show_role'] = $haveRole[count($haveRole) - 1];
         }
-        if(!in_array($user_info['last_login_role'],$haveRole)){
-            $user_data['last_login_role']=$haveRole[count($haveRole)-1];
+        if (!in_array($user_info['last_login_role'], $haveRole)) {
+            $user_data['last_login_role'] = $haveRole[count($haveRole) - 1];
         }
-        $memberModel->where(array('uid'=>$uid))->save($user_data);
+        $memberModel->where(array('uid' => $uid))->save($user_data);
         return true;
     }
 
@@ -405,7 +410,7 @@ class UserController extends AdminController
             'phone' => '手机号码',
             'email' => '邮箱',
             'number' => '数字',
-            'join'=>'关联字段'
+            'join' => '关联字段'
         );
         foreach ($field_list as &$val) {
             $val['form_type'] = $type_default[$val['form_type']];
@@ -483,7 +488,7 @@ class UserController extends AdminController
             //增加当二级字段类型为join时也提交$child_form_type @MingYang
             if ($form_type == 'input') {
                 $data['child_form_type'] = $child_form_type;
-            }else{
+            } else {
                 $data['child_form_type'] = '';
             }
             $data['validation'] = $validation;
@@ -727,11 +732,11 @@ class UserController extends AdminController
      */
     public function action()
     {
-       // $aModule = I('post.module', '-1', 'text');
+        // $aModule = I('post.module', '-1', 'text');
         $aModule = $this->parseSearchKey('module');
 
-        is_null($aModule) && $aModule =-1;
-        if($aModule!=-1){
+        is_null($aModule) && $aModule = -1;
+        if ($aModule != -1) {
             $map['module'] = $aModule;
         }
         unset($_REQUEST['module']);
@@ -741,6 +746,7 @@ class UserController extends AdminController
         $Action = M('Action')->where(array('status' => array('gt', -1)));
 
         $list = $this->lists($Action, $map);
+        lists_plus($list);
         int_to_string($list);
         // 记录当前列表页的cookie
         Cookie('__forward__', $_SERVER['REQUEST_URI']);
@@ -830,7 +836,7 @@ class UserController extends AdminController
     public function changeStatus($method = null)
     {
         $id = array_unique((array)I('id', 0));
-        if (in_array(C('USER_ADMINISTRATOR'), $id)) {
+        if (count(array_intersect(explode(',', C('USER_ADMINISTRATOR')), $id)) > 0) {
             $this->error("不允许对超级管理员执行该操作!");
         }
         $id = is_array($id) ? implode(',', $id) : $id;
@@ -864,7 +870,7 @@ class UserController extends AdminController
     {
         switch ($code) {
             case -1:
-                $error = '用户名长度必须在'.modC('USERNAME_MIN_LENGTH',2,'USERCONFIG').'-'.modC('USERNAME_MAX_LENGTH',32,'USERCONFIG').'个字符之间！';
+                $error = '用户名长度必须在' . modC('USERNAME_MIN_LENGTH', 2, 'USERCONFIG') . '-' . modC('USERNAME_MAX_LENGTH', 32, 'USERCONFIG') . '个字符之间！';
                 break;
             case -2:
                 $error = '用户名被禁止注册！';
@@ -935,8 +941,8 @@ class UserController extends AdminController
             foreach ($scoreTypes as $v) {
                 $aAction = I('post.action_score' . $v['id'], '', 'op_t');
                 $aValue = I('post.value_score' . $v['id'], 0, 'intval');
-                D('Ucenter/Score')->setUserScore($aUids, $aValue, $v['id'], $aAction,'',0,'后台管理员充值页面充值');
-                D('Ucenter/Score')->cleanUserCache($aUids,$aValue);
+                D('Ucenter/Score')->setUserScore($aUids, $aValue, $v['id'], $aAction, '', 0, '后台管理员充值页面充值');
+                D('Ucenter/Score')->cleanUserCache($aUids, $aValue);
 
             }
             $this->success('设置成功', 'refresh');
@@ -1058,10 +1064,10 @@ class UserController extends AdminController
                 $map['role_id'] = $val;
                 $oldConfig = $roleConfigModel->where($map)->find();
                 $oldConfig['value'] = array_diff(explode(',', $oldConfig['value']), array($edit_id));
-                if(count($oldConfig['value'])){
+                if (count($oldConfig['value'])) {
                     $oldConfig['value'] = implode(',', $oldConfig['value']);
                     $roleConfigModel->saveData($map, $oldConfig);
-                }else{
+                } else {
                     $roleConfigModel->deleteData($map);
                 }
             }

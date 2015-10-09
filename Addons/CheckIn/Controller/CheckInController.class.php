@@ -83,6 +83,11 @@ class CheckInController extends AddonsController
             }
         }
 
+            foreach($user_list as &$u){
+                $temp_user=query_user(array('nickname'),$u['uid']);
+                $u['nickname']=$temp_user['nickname'];
+            }
+            unset($u);
 
         $this->assign('user_list', $user_list);
         $this->assign('totalCount', $totalCount);

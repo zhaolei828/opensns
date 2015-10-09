@@ -47,8 +47,8 @@ class FollowModel extends Model
          * @param int $type 消息类型，0系统，1用户，2应用
          */
         $user = query_user(array('id', 'nickname', 'space_url'));
-        $this->S($follow['who_follow'], $follow['follow_who'],null);
-        D('Message')->sendMessage($uid, '粉丝数增加' ,  $user['nickname'] . ' 关注了你。', 'Ucenter/Index/index',array('uid'=>is_login()));
+        $this->S($follow['who_follow'], $follow['follow_who'], null);
+        D('Message')->sendMessage($uid, '粉丝数增加', $user['nickname'] . ' 关注了你。', 'Ucenter/Index/index', array('uid' => is_login()));
         return $this->add($follow);
     }
 
@@ -65,22 +65,28 @@ class FollowModel extends Model
         S('atUsersJson_' . is_login(), null);
         $user = query_user(array('id', 'nickname', 'space_url'));
 
-        D('Message')->sendMessage($uid, '粉丝数减少' ,  $user['nickname'] . ' 取消了对你的关注。', 'Ucenter/Index/index',array('uid'=>is_login()));
+        D('Message')->sendMessage($uid, '粉丝数减少', $user['nickname'] . ' 取消了对你的关注。', 'Ucenter/Index/index', array('uid' => is_login()));
 
 
-        $this->S($follow['who_follow'], $follow['follow_who'],null);
+        $this->S($follow['who_follow'], $follow['follow_who'], null);
         return $this->where($follow)->delete();
     }
 
     public function isFollow($who_follow, $follow_who)
     {
         $follow = $this->S($who_follow, $follow_who);
-        if ($follow===false) {
+        if ($follow === false) {
             $follow = D('Follow')->where(array('who_follow' => $who_follow, 'follow_who' => $follow_who))->count();
             $follow++;
-            $this->S($who_follow, $follow_who,$follow);
+            $this->S($who_follow, $follow_who, $follow);
         }
-        return intval($follow)-1;
+        return intval($follow) - 1;
+    }
+
+    public function getFollow($who_follow, $follow_who)
+    {
+        $follow = $this->where(array('who_follow' => $who_follow, 'follow_who' => $follow_who))->find();
+        return $follow;
     }
 
     public function S($who_follow, $follow_who, $data = '')
@@ -157,7 +163,7 @@ class FollowModel extends Model
      * @param $follow_who
      * @return int|mixed
      */
-    public function addFollow($who_follow, $follow_who,$invite=0)
+    public function addFollow($who_follow, $follow_who, $invite = 0)
     {
         $follow['who_follow'] = $who_follow;
         $follow['follow_who'] = $follow_who;
@@ -182,22 +188,22 @@ class FollowModel extends Model
          * @param int $type 消息类型，0系统，1用户，2应用
          */
         $user = query_user(array('id', 'nickname', 'space_url'), $who_follow);
-        if($invite){
-            if($who_follow<$follow_who){
-                $content='邀请者 '.$user['nickname'] . ' 关注了你。';
-            }else{
-                $content='你邀请的用户 '.$user['nickname'] . ' 关注了你。';
+        if ($invite) {
+            if ($who_follow < $follow_who) {
+                $content = '邀请者 ' . $user['nickname'] . ' 关注了你。';
+            } else {
+                $content = '你邀请的用户 ' . $user['nickname'] . ' 关注了你。';
             }
-        }else{
-            if($who_follow<$follow_who){
-                $content='系统推荐用户 '.$user['nickname'] . ' 关注了你。';
-            }else{
-                $content='新入住用户 '.$user['nickname'] . ' 关注了你。';
+        } else {
+            if ($who_follow < $follow_who) {
+                $content = '系统推荐用户 ' . $user['nickname'] . ' 关注了你。';
+            } else {
+                $content = '新入住用户 ' . $user['nickname'] . ' 关注了你。';
             }
         }
 
 
-        D('Message')->sendMessage($follow_who, '粉丝数增加' ,  $content, 'Ucenter/Index/index',array('uid'=>$who_follow),$who_follow);
+        D('Message')->sendMessage($follow_who, '粉丝数增加', $content, 'Ucenter/Index/index', array('uid' => $who_follow), $who_follow);
 
         return $this->add($follow);
     }

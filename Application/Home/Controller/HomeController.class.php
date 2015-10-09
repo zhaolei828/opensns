@@ -24,7 +24,7 @@ class HomeController extends AdminController
         $data['OPEN_LOGIN_PANEL'] = $data['OPEN_LOGIN_PANEL'] ? $data['OPEN_LOGIN_PANEL'] : 1;
 
 
-        $builder->title('首页设置');
+        $builder->title(L('home_setting'));
 
         $modules = D('Common/Module')->getAll();
         foreach ($modules as $m) {
@@ -34,35 +34,35 @@ class HomeController extends AdminController
                 }
             }
         }
-        $module[] = array('data-id' => 'slider', 'title' => '轮播');
+        $module[] = array('data-id' => 'slider', 'title' => L('carousel'));
 
-        $default = array(array('data-id' => 'disable', 'title' => '禁用', 'items' => $module), array('data-id' => 'enable', 'title' => '启用', 'items' => array()));
-        $builder->keyKanban('BLOCK', '展示模块','拖拽到右侧以展示这些模块，新的模块安装后会多出一些可操作的项目');
+        $default = array(array('data-id' => 'disable', 'title' => L('disabled'), 'items' => $module), array('data-id' => 'enable', 'title' =>L('enabled'), 'items' => array()));
+        $builder->keyKanban('BLOCK', L('display_block'),L('tip_display_block'));
         $data['BLOCK'] = $builder->parseKanbanArray($data['BLOCK'], $module, $default);
-        $builder->group('展示模块', 'BLOCK');
+        $builder->group(L('display_block'), 'BLOCK');
 
 
-        $builder->keySingleImage('PIC1', '图片');
-        $builder->keyText('URL1', '链接');
-        $builder->keyText('TITLE1', '标题');
-        $builder->keyRadio('TARGET1', '新窗口打开', '', array('_blank' => '新窗口', '_self' => '本窗口'));
+        $builder->keySingleImage('PIC1', L('picture'));
+        $builder->keyText('URL1', L('link'));
+        $builder->keyText('TITLE1', L('title'));
+        $builder->keyRadio('TARGET1', L('new_window_open'), '', array('_blank' => L('new_window'), '_self' => L('self_window')));
 
-        $builder->group('幻灯片1', 'PIC1,URL1,TITLE1,TARGET1');
+        $builder->group(L('slide1'), 'PIC1,URL1,TITLE1,TARGET1');
 
-        $builder->keySingleImage('PIC2', '图片');
-        $builder->keyText('URL2', '链接');
-        $builder->keyText('TITLE2', '标题');
-        $builder->keyRadio('TARGET2', '新窗口打开', '', array('_blank' => '新窗口', '_self' => '本窗口'));
+        $builder->keySingleImage('PIC2', L('picture'));
+        $builder->keyText('URL2', L('link'));
+        $builder->keyText('TITLE2', L('title'));
+        $builder->keyRadio('TARGET2', L('new_window_open'), '', array('_blank' => L('new_window'), '_self' => L('self_window')));
 
-        $builder->group('幻灯片2', 'PIC2,URL2,TITLE2,TARGET2');
+        $builder->group(L('slide2'), 'PIC2,URL2,TITLE2,TARGET2');
 
 
-        $builder->keySingleImage('PIC3', '图片');
-        $builder->keyText('URL3', '链接');
-        $builder->keyText('TITLE3', '标题');
-        $builder->keyRadio('TARGET3', '新窗口打开', '', array('_blank' => '新窗口', '_self' => '本窗口'));
+        $builder->keySingleImage('PIC3', L('picture'));
+        $builder->keyText('URL3', L('link'));
+        $builder->keyText('TITLE3', L('title'));
+        $builder->keyRadio('TARGET3', L('new_window_open'), '', array('_blank' => L('new_window'), '_self' => L('self_window')));
 
-        $builder->group('幻灯片3', 'PIC3,URL3,TITLE3,TARGET3');
+        $builder->group(L('slide3'), 'PIC3,URL3,TITLE3,TARGET3');
 
         $show_blocks = get_kanban_config('BLOCK_SORT', 'enable', array(), 'Home');
 

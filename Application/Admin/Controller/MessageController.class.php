@@ -15,22 +15,44 @@ class MessageController extends AdminController
 
     public function userList($page=1,$r=20)
     {
-
-        $aUserGroup = I('get.user_group', 0, 'intval');
-        $aRole = I('get.role', 0, 'intval');
+        $aSearch1 = I('get.user_search1','');
+        $aSearch2 = I('get.user_search2',0,'intval');
         $map = array();
 
-        if (!empty($aRole) || !empty($aUserGroup)) {
-            $uids = $this->getUids($aUserGroup, $aRole);
-            $map['uid'] = array('in', $uids);
-        }
+        if (empty($aSearch1) && empty($aSearch2)) {
 
-        $user = D('member')->where($map)->page($page,$r)->field('uid,nickname')->select();
-        foreach ($user as &$v) {
-            $v['id'] = $v['uid'];
-        }
-        unset($v);
-        $totalCount = D('member')->where($map)->count();
+
+            $aUserGroup = I('get.user_group', 0, 'intval');
+            $aRole = I('get.role', 0, 'intval');
+
+
+            if (!empty($aRole) || !empty($aUserGroup)) {
+                $uids = $this->getUids($aUserGroup, $aRole);
+                $map['uid'] = array('in', $uids);
+            }
+
+
+            $user = D('member')->where($map)->page($page, $r)->field('uid,nickname')->select();
+            foreach ($user as &$v) {
+                $v['id'] = $v['uid'];
+            }
+            unset($v);
+            $totalCount = D('member')->where($map)->count();
+
+        } else {
+
+            $uids = $this->getUids_sc($aSearch1, $aSearch2);
+            $map['uid'] = array('in', $uids);
+
+            $user = D('member')->where($map)->page($page, $r)->field('uid,nickname')->select();
+            foreach ($user as &$v) {
+                $v['id'] = $v['uid'];
+            }
+            unset($v);
+            $totalCount = D('member')->where($map)->count();
+
+
+    }
         $r = 20;
 
         $role = D('Role')->selectByMap(array('status' => 1));
@@ -46,13 +68,17 @@ class MessageController extends AdminController
             array_push($user_group, array('id' => $v['id'], 'value' => $v['title']));
         }
 
+
         $builder = new AdminListBuilder();
         $builder->title("群发用户列表");
         $builder->meta_title = '群发用户列表';
 
         $builder->setSelectPostUrl(U('Message/userList'))
+            ->setSearchPostUrl(U('Message/userList'))
             ->select('用户组：', 'user_group', 'select', '根据用户组筛选', '', '', $user_group)
-            ->select('身份：', 'role', 'select', '根据用户身份筛选', '', '', $user_role);
+            ->select('身份：', 'role', 'select', '根据用户身份筛选', '', '', $user_role)
+            ->search('','user_search1','','根据用户昵称搜索','','','')
+            ->search('','user_search2','','根据用户ID搜索','','','');
         $builder->buttonModalPopup(U('Message/sendMessage'), array('user_group' => $aUserGroup, 'role' => $aRole), '发送消息', array('data-title' => '群发消息', 'target-form' => 'ids', 'can_null' => 'true'));
         $builder->keyText('uid', '用户ID')->keyText('nickname', "昵称");
 
@@ -86,6 +112,28 @@ class MessageController extends AdminController
         return $uids;
 
 
+    }
+    private function getUids_sc($search_nn = "", $search_id = 0)
+    {
+        $uids = array();
+        if (!empty($search_nn)) {
+            $users = D('member')->where(array('nickname' => $search_nn))->field('uid')->select();
+            $uids_nn = getSubByKey($users, 'uid');
+            if ($uids_nn) {
+                $uids = $uids_nn;
+            }
+        }
+        if (!empty($search_id)) {
+            $users = D('member')->where(array('uid' => $search_id))->field('uid')->select();
+            $uids_id = getSubByKey($users, 'uid');
+            if ($uids_id) {
+                $uids = $uids_id;
+            }
+        }
+        if (!empty($search_id) && !empty($search_nn)) {
+            $uids = array_intersect($search_id, $search_nn);
+        }
+        return $uids;
     }
 
     public function sendMessage()

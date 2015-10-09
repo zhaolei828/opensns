@@ -24,16 +24,14 @@ class TopUserListWidget extends Action
         $users = S('weibo_latest_user_' . $tag);
         $map['status'] = 1;
         if (empty($users)) {
-
-            $user = D('Member')->where($map)->order($order)->limit($limit)->select();
-            foreach ($user as &$uid) {
-                $uid['user'] = query_user(array('avatar64', 'nickname', 'space_url', 'space_link'), $uid['uid']);
-                $uid['id'] = $uid['uid'];
-            }
-            unset($uid);
-            $users = $user;
+            $users = D('Member')->where($map)->order($order)->limit($limit)->select();
             S('weibo_latest_user_' . $tag, $users, 300);
         }
+        foreach ($users as &$v) {
+            $v['user'] = query_user(array('avatar64', 'nickname', 'space_url', 'space_link','uid'), $v['uid']);
+            $v['id']=$v['user']['uid'];
+        }
+        unset($v);
         $this->assign('user', $users);
         $this->assign('title', $title);
         $this->display('Widget/userList');

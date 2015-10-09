@@ -27,13 +27,13 @@ class PublicController extends Controller
     {
         $aUid=I('post.uid',0,'intval');
         if (!is_login()) {
-            $this->ajaxReturn(array('status' => 0, 'info' => '请登陆'));
+            $this->ajaxReturn(array('status' => 0, 'info' => L("please")." ".L("log_in")));
         }
 
         if (D('Follow')->follow($aUid)) {
-            $this->ajaxReturn(array('status' => 1, 'info' => '关注成功'));
+            $this->ajaxReturn(array('status' => 1, 'info' => L("followers")." ".L('success')));
         } else {
-            $this->ajaxReturn(array('status' => 0, 'info' => '关注失败'));
+            $this->ajaxReturn(array('status' => 0, 'info' => L("followers")." ".L("fail")));
         }
     }
 
@@ -45,13 +45,13 @@ class PublicController extends Controller
     {
         $aUid=I('post.uid',0,'intval');
         if (!is_login()) {
-            $this->ajaxReturn(array('status' => 0, 'info' => '请登陆'));
+            $this->ajaxReturn(array('status' => 0, 'info' => L("please")." ".L("log_in")));
         }
 
         if (D('Follow')->unfollow($aUid)) {
-            $this->ajaxReturn(array('status' => 1, 'info' => '取消关注成功'));
+            $this->ajaxReturn(array('status' => 1, 'info' =>  L("cancel")." ".L("followers")." ".L("success")));
         } else {
-            $this->ajaxReturn(array('status' => 0, 'info' => '取消关注失败'));
+            $this->ajaxReturn(array('status' => 0, 'info' =>  L("cancel")." ".L("followers")." ".L("fail")));
         }
     }
 
@@ -85,7 +85,7 @@ class PublicController extends Controller
     {
         //获取能AT的人，UID列表
         $uid = get_uid();
-        $follows = D('Follow')->where(array('who_follow' => $uid, 'follow_who' => $uid, '_logic' => 'or'))->limit(999)->select();
+        $follows = D('Follow')->where(array('who_follow' => $uid, 'follow_who' => $uid, '_logic' => 'or'))->select();
         $uids = array();
         foreach ($follows as &$e) {
             $uids[] = $e['who_follow'];

@@ -41,7 +41,7 @@ class IndexController extends Controller
 
 
 
-            $sub_menu['left']= array(array('tab' => 'home', 'title' => "广场", 'href' =>  U('index'))//,array('tab'=>'rank','title'=>'排行','href'=>U('rank'))
+            $sub_menu['left']= array(array('tab' => 'home', 'title' => L('square'), 'href' =>  U('index'))//,array('tab'=>'rank','title'=>'排行','href'=>U('rank'))
 
             );
 
@@ -62,7 +62,7 @@ class IndexController extends Controller
         C($config); //添加配置
 
         if (!C('WEB_SITE_CLOSE')) {
-            $this->error('站点已经关闭，请稍后访问~');
+            $this->error(L('error_website_closed'));
         }
     }
 

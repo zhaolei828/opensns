@@ -9,11 +9,16 @@ class UserModel
     private $member_fields = array('uid', 'nickname', 'sex', 'birthday', 'qq', 'login', 'reg_ip', 'reg_time', 'last_login_ip', 'last_login_time', 'status', 'last_login_role', 'show_role', 'signature', 'pos_province', 'pos_city', 'pos_district', 'pos_community', 'score1', 'score2', 'score3', 'score4', 'con_check', 'total_check');
     private $ucenter_member_fields = array('id', 'username', 'password', 'email', 'mobile', 'reg_time', 'reg_ip', 'last_login_time', 'last_login_ip', 'update_time', 'status', 'type');
 
-    function query_user($fields = null, $uid = null)
+    /**获取用户信息
+     * @param null $fields
+     * @param null $uid
+     * @return array|mixed|null
+     */
+    function query_user($fields = null, $uid = 0)
     {
         //默认赋值
         if ($fields === null) {
-            $fields = array('nickname', 'space_url','space_mob_url', 'avatar32','avatar64', 'avatar128', 'uid');
+            $fields = array('nickname', 'space_url', 'space_mob_url', 'avatar32', 'avatar64', 'avatar128', 'uid');
         }
         //如果fields不是数组，直接返回需要的值
         if (!is_array($fields)) {
@@ -26,10 +31,10 @@ class UserModel
             $fields[] = 'score1';
         }
         //默认获取自己的资料
-        $uid = $uid != null ? $uid : is_login();
+        $uid = (intval($uid) != 0 ? $uid : get_uid());
 
         //获取缓存过的字段
-        list($cacheResult, $field, $fields) = self::getCachedFields($fields, $uid);
+        list($cacheResult, $field, $fields) =$this->getCachedFields($fields, $uid);
 
         //获取各个表的字段值
         list($avatarFields, $homeResult, $ucenterResult) = $this->getSplittedFieldsValue($fields, $uid);
@@ -80,15 +85,26 @@ class UserModel
             $result['is_followed'] = $follow ? true : false;
         }
 
+
         //TODO 在此加入扩展字段的处理钩子
         //↑↑↑ 新增字段应该写在在这行注释以上 ↑↑↑
 
         //合并结果，不包括缓存
-        $result = array_merge($ucenterResult, $homeResult, $spaceUrlResult, $result,$spaceMobUrlResult);
+        $result = array_merge($ucenterResult, $homeResult, $spaceUrlResult, $result, $spaceMobUrlResult);
         //写缓存
         $result = $this->writeCache($uid, $result);
         //合并结果，包括缓存
         $result = array_merge($result, $cacheResult);
+
+        //对昵称的额外处理
+        $result['real_nickname'] = $result['nickname'];
+        if (get_uid() != $uid && is_login()) {//如果已经登陆，并且获取的用户不是自己
+            $alias = $this->getAlias($uid);
+            if ($alias != '') {//如果设置了备注名
+                $result['nickname'] = $alias;
+                $result['alias'] = $alias;
+            }
+        }
 
         if (in_array('score', $fields)) {
             $result['score'] = $result['score1'];
@@ -99,6 +115,27 @@ class UserModel
         return $result;
     }
 
+    /**获取用户昵称
+     * @param $uid
+     * @return mixed|string
+     */
+    private function getAlias($uid)
+    {
+        //获取缓存的alias
+        $tag = 'alias_' . get_uid() . '_' . $uid;
+        $alias = S($tag);
+        if ($alias === false) {
+            //没有缓存
+            $alias = '';
+            $follow = D('Common/Follow')->getFollow(get_uid(), $uid);//获取关注情况
+            if ($follow && $follow['alias'] != '') {//已关注
+                $alias = $follow['alias'];
+            }
+            S($tag, $alias);
+        }
+        return $alias;
+    }
+
     function read_query_user_cache($uid, $field)
     {
         return S("query_user_{$uid}_{$field}");
@@ -106,7 +143,7 @@ class UserModel
 
     function write_query_user_cache($uid, $field, $value)
     {
-        return S("query_user_{$uid}_{$field}", $value, 1800);
+        return S("query_user_{$uid}_{$field}", $value);
     }
 
     /**清理用户数据缓存，即时更新query_user返回结果。
@@ -120,8 +157,10 @@ class UserModel
             foreach ($field as $field_item) {
                 S("query_user_{$uid}_{$field_item}", null);
             }
+        }else{
+            S("query_user_{$uid}_{$field}", null);
         }
-        S("query_user_{$uid}_{$field}", null);
+
     }
 
     /**
@@ -135,13 +174,12 @@ class UserModel
         $cachedFields = array();
         $cacheResult = array();
         foreach ($fields as $field) {
-            $cache = read_query_user_cache($uid, $field);
+            $cache = $this->read_query_user_cache($uid, $field);
             if ($cache !== false) {
                 $cacheResult[$field] = $cache;
                 $cachedFields[] = $field;
             }
         }
-
         //去除已经缓存的字段
         $fields = array_diff($fields, $cachedFields);
         return array($cacheResult, $field, $fields);
@@ -171,7 +209,7 @@ class UserModel
     {
 //获取两张用户表格中的所有字段
         $homeFields = M('Member')->getDBFields();
-        $ucenterFields =M('UcenterMember')->getDBFields();
+        $ucenterFields = M('UcenterMember')->getDBFields();
 
         //分析每个表格分别要读取哪些字段
         list($avatarFields, $homeFields, $ucenterFields) = $this->getSplittedFields($fields, $homeFields, $ucenterFields);
@@ -312,9 +350,9 @@ class UserModel
                 $rank = M('rank')->where('id=' . $val['rank_id'])->find();
                 $val['title'] = $rank['title'];
                 $val['logo_url'] = get_pic_src(M('picture')->where('id=' . $rank['logo'])->field('path')->getField('path'));
-                $val['label_content']=$rank['label_content'];
-                $val['label_bg']=$rank['label_bg'];
-                $val['label_color']=$rank['label_color'];
+                $val['label_content'] = $rank['label_content'];
+                $val['label_bg'] = $rank['label_bg'];
+                $val['label_color'] = $rank['label_color'];
                 if ($val['is_show']) {
                     $num = 1;
                 }

@@ -337,6 +337,15 @@ class ConfigController extends BaseController
         if ($had_nickname) {
             $this->error('昵称已被人使用。');
         }
+        $denyName = M("Config")->where(array('name' => 'USER_NAME_BAOLIU'))->getField('value');
+        if ($denyName != '') {
+            $denyName = explode(',', $denyName);
+            foreach ($denyName as $val) {
+                if (!is_bool(strpos($nickname, $val))) {
+                    $this->error('该昵称已被禁用。');
+                }
+            }
+        }
     }
 
 

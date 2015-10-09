@@ -1,19 +1,19 @@
 <?php
-function parse_at_users($content,$disabel_hight=false)
+function parse_at_users($content, $disabel_hight = false)
 {
     $content = $content . ' ';
     //找出被AT的用户
-    $at_usernames = get_at_usernames($content);
+    $at_users = get_at_users($content);
 
     //将@用户替换成链接
-    foreach ($at_usernames as $e) {
-        $user = D('Member')->where(array('nickname' => $e))->find();
+    foreach ($at_users as $e) {
+        $user = D('Member')->where(array('uid' => $e))->find();
         if ($user) {
-            $query_user = query_user(array('space_url','avatar32'), $user['uid']);
-            if(modC('HIGH_LIGHT_AT',1,'Weibo') && !$disabel_hight){
-                $content = str_replace("@$e", " <a class='user-at hl ' ucard=\"$user[uid]\" href=\"$query_user[space_url]\"><img src=\"$query_user[avatar32]\">@$e </a> ", $content);
-            }else{
-                $content = str_replace("@$e", " <a ucard=\"$user[uid]\" href=\"$query_user[space_url]\">@$e </a> ", $content);
+            $query_user = query_user(array('space_url', 'avatar32', 'nickname'), $user['uid']);
+            if (modC('HIGH_LIGHT_AT', 1, 'Weibo') && !$disabel_hight) {
+                $content = str_replace("[at:$e]", " <a class='user-at hl ' ucard=\"$user[uid]\" href=\"$query_user[space_url]\"><img src=\"$query_user[avatar32]\">@$query_user[nickname] </a> ", $content);
+            } else {
+                $content = str_replace("[at:$e]", " <a ucard=\"$user[uid]\" href=\"$query_user[space_url]\">@$query_user[nickname] </a> ", $content);
             }
 
         }
@@ -29,10 +29,10 @@ function parse_at_users($content,$disabel_hight=false)
  * @return array
  * @author:xjw129xjt(肖骏涛) xjt@ourstu.com
  */
-function get_at_usernames($content)
+function get_at_users($content)
 {
     //正则表达式匹配
-    $user_pattern = "/\\@([^\\#|\\s|^\\<]+)/";
+    $user_pattern = '/\[at:(\d*)\]/';
     preg_match_all($user_pattern, $content, $users);
 
     //返回用户名列表
@@ -47,13 +47,8 @@ function get_at_usernames($content)
  */
 function get_at_uids($content)
 {
-    $usernames = get_at_usernames($content);
-    $result = array();
-    foreach ($usernames as $username) {
-        $user = D('Member')->where(array('nickname' => op_t($username)))->field('uid')->find();
-        $result[] = $user['uid'];
-    }
-    return $result;
+    $uids = get_at_users($content);
+    return $uids;
 }
 
 function parse_comment_content($content)
@@ -65,11 +60,17 @@ function parse_comment_content($content)
 function parse_weibo_content($content)
 {
     $content = shorten_white_space($content);
-    $content = op_t($content,false);
+
+    if (modC('WEIBO_BR', 0, 'Weibo')) {
+        $content = str_replace('/br', '<br/>', $content);
+        $content = str_replace('/nb', '&nbsp', $content);
+
+    } else {
+        $content=str_replace('/br','',$content);
+        $content=str_replace('/nb','',$content);
+    }
     $content = parse_url_link($content);
     $content = parse_expression($content);
-    $content = parse_at_users($content);
-
     $content = parseWeiboContent($content);
     return $content;
 }
@@ -96,7 +97,7 @@ function parseWeiboContent($content)
 }
 
 
-
-function parse_content($content){
+function parse_content($content)
+{
     return $content;
 }

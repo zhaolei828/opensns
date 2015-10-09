@@ -17,18 +17,31 @@ class SEOController extends AdminController
     public function index($page = 1, $r = 20)
     {
         //读取规则列表
+        $aApp=I('get.app','','text');
         $map = array('status' => array('EGT', 0));
+        if($aApp!=''){
+            $map['app']=$aApp;
+        }
         $model = M('SeoRule');
         $ruleList = $model->where($map)->page($page, $r)->order('sort asc')->select();
         $totalCount = $model->where($map)->count();
 
+        $module = D('Common/Module')->getAll();
+        $app = array();
+        foreach ($module as $m) {
+            if ($m['is_setup'])
+                $app[] =array('id'=>$m['name'],'value'=>$m['alias']) ;
+        }
+
         //显示页面
         $builder = new AdminListBuilder();
+        $builder->setSelectPostUrl(U('index'));
         $builder->title('SEO规则配置')
             ->setStatusUrl(U('setRuleStatus'))->buttonEnable()->buttonDisable()->buttonDelete()
             ->buttonNew(U('editRule'))->buttonSort(U('sortRule'))
             ->keyId()->keyTitle()->keyText('app', '模块')->keyText('controller', '控制器')->keyText('action', '方法')
             ->keyText('seo_title', 'SEO标题')->keyText('seo_keywords', 'SEO关键字')->keyText('seo_description', 'SEO描述')
+            ->select('所属模块：', 'app', 'select', '', '', '', array_merge(array(array('id' => '', 'value' => '全部')), $app))
             ->keyStatus()->keyDoActionEdit('editRule?id=###')
             ->data($ruleList)
             ->pagination($totalCount, $r)
@@ -42,6 +55,7 @@ class SEOController extends AdminController
         $model = M('SeoRule');
         $ruleList = $model->where($map)->page($page, $r)->order('sort asc')->select();
         $totalCount = $model->where($map)->count();
+
 
         //显示页面
         $builder = new AdminListBuilder();
@@ -60,7 +74,8 @@ class SEOController extends AdminController
         $builder->doSetStatus('SeoRule', $ids, $status);
     }
 
-    public function doClear($ids){
+    public function doClear($ids)
+    {
         $builder = new AdminListBuilder();
         $builder->doDeleteTrue('SeoRule', $ids);
     }
@@ -107,17 +122,19 @@ class SEOController extends AdminController
         $modules = D('Module')->getAll();
 
 
-        $app=array(''=>'-所有模块-');
+        $app = array('' => '-所有模块-');
         foreach ($modules as $m) {
-            if($m['is_setup']){
-                $app[$m['name']]=$m['alias'];
+            if ($m['is_setup']) {
+                $app[$m['name']] = $m['alias'];
             }
         }
 
+        $rule['summary']=nl2br($rule['summary']);
         $builder->title($isEdit ? '编辑规则' : '添加规则')
-            ->keyId()->keyText('title', '名称', '规则名称，方便记忆')->keySelect('app', '模块名称', '不填表示所有模块',$app)->keyText('controller', '控制器', '不填表示所有控制器')
+            ->keyId()->keyText('title', '名称', '规则名称，方便记忆')->keySelect('app', '模块名称', '不填表示所有模块', $app)->keyText('controller', '控制器', '不填表示所有控制器')
             ->keyText('action2', '方法', '不填表示所有方法')->keyText('seo_title', 'SEO标题', '不填表示使用下一条规则，支持变量')
             ->keyText('seo_keywords', 'SEO关键字', '不填表示使用下一条规则，支持变量')->keyTextArea('seo_description', 'SEO描述', '不填表示使用下一条规则，支持变量')
+            ->keyReadOnly('summary','变量说明','调用的时候必须写成{$xxx},其中xxx就是下方变量')
             ->keyStatus()
             ->data($rule)
             ->buttonSubmit(U('doEditRule'))->buttonBack()

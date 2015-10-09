@@ -32,7 +32,10 @@
                                     <div class="rank_check">
                                         <div>
                                             <label class="checkbox" title="id：{$rank['id']}  创建人：{$rank['name']}  创建时间：{$rank['create_time']|time_format='Y-m-d'}">
-                                            <input class="auth_rank rank_row" type="checkbox" name="ranks[]" value="{$rank['id']}"/>{$rank['title']}<img src="{$rank['logo']|getThumbImageById}"/>
+                                            <input class="auth_rank rank_row" type="checkbox" name="ranks[]" value="{$rank['id']}"/>{$rank['title']}
+                                                <empty name="rank.label_content"><img src="{$rank['logo']|getThumbImageById}"/><else/>
+                                                    <span class="label label-badge rank-label" title="{$rank.title}" style="line-height: 6px;height: 18px;vertical-align: middle;text-align: center; background: {$rank.label_bg} !important;color:{$rank.label_color} !important;">{$rank.label_content}</span>
+                                                    </empty>
                                             </label>
                                         </div>
                                     </div>

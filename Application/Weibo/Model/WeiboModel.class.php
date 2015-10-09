@@ -20,6 +20,13 @@ class WeiboModel extends Model
 
     public function addWeibo($uid, $content = '', $type = 'feed', $feed_data = array(), $from = '')
     {
+        $aContent = I('post.content', '', 'html');
+        $content = str_replace(' ', '/nb', $aContent);
+        $content = nl2br($content);
+        $content = str_replace('<br />', '/br ', $content);
+        $content = text($content);
+        //$topic = get_topic($content);
+
         //写入数据库
         $data = array('uid' => $uid, 'content' => $content, 'type' => $type, 'data' => serialize($feed_data), 'from' => $from);
         $data = $this->create($data);
@@ -64,7 +71,7 @@ class WeiboModel extends Model
             $weibo_data = unserialize($weibo['data']);
             $class_exists = true;
 
-            $type = array('repost', 'feed', 'image','share');
+            $type = array('repost', 'feed', 'image', 'share');
             if (!in_array($weibo['type'], $type)) {
                 $class_exists = class_exists('Addons\\Insert' . ucfirst($weibo['type']) . '\\Insert' . ucfirst($weibo['type']) . 'Addon');
             }
@@ -76,10 +83,9 @@ class WeiboModel extends Model
                 $fetchContent = A('Weibo/Type')->fetchRepost($weibo);
             } elseif ($weibo['type'] === 'image') {
                 $fetchContent = A('Weibo/Type')->fetchImage($weibo);
-            } elseif($weibo['type'] === 'share'){
-                $fetchContent = R('Weibo/Share/getFetchHtml',array('param'=>unserialize($weibo['data']),'weibo'=>$weibo),'Widget');
-            }
-            else {
+            } elseif ($weibo['type'] === 'share') {
+                $fetchContent = R('Weibo/Share/getFetchHtml', array('param' => unserialize($weibo['data']), 'weibo' => $weibo), 'Widget');
+            } else {
                 $fetchContent = Hook::exec('Addons\\Insert' . ucfirst($weibo['type']) . '\\Insert' . ucfirst($weibo['type']) . 'Addon', 'fetch' . ucfirst($weibo['type']), $weibo);
             }
             $weibo = array(
@@ -100,21 +106,22 @@ class WeiboModel extends Model
             );
             S('weibo_' . $id, $weibo, 60 * 60);
         }
+
+        $weibo['fetchContent'] = parse_at_users($weibo['fetchContent']);
         $weibo['user'] = query_user(array('uid', 'nickname', 'avatar64', 'space_url', 'rank_link', 'title'), $weibo['uid']);
         $weibo['can_delete'] = $this->canDeleteWeibo($weibo);
 
 
         // 判断转发的原微博是否已经删除
-        if($weibo['type'] == 'repost'){
-            $source_weibo = $this->getWeiboDetail( $weibo['weibo_data']['sourceId']);
-            if(!$source_weibo['uid']){
-                if(!$check_empty){
+        if ($weibo['type'] == 'repost') {
+            $source_weibo = $this->getWeiboDetail($weibo['weibo_data']['sourceId']);
+            if (!$source_weibo['uid']) {
+                if (!$check_empty) {
                     S('weibo_' . $id, null);
                     $weibo = $this->getWeiboDetail($id);
                 }
             }
         }
-
         return $weibo;
     }
 
@@ -140,8 +147,8 @@ class WeiboModel extends Model
         $result = $this->where(array('id' => $weibo_id))->save(array('status' => -1, 'comment_count' => 0));
         D('Weibo/WeiboComment')->where(array('weibo_id' => $weibo_id))->setField('status', -1);
 
-        if($weibo['type'] == 'repost'){
-            $this->where(array('id'=>$weibo['weibo_data']['sourceId']))->setDec('repost_count');
+        if ($weibo['type'] == 'repost') {
+            $this->where(array('id' => $weibo['weibo_data']['sourceId']))->setDec('repost_count');
             S('weibo_' . $weibo['weibo_data']['sourceId'], null);
         }
 

@@ -206,8 +206,10 @@ class ConfigController extends AdminController
         $builder = new AdminConfigBuilder();
         $data = $builder->handleConfig();
         $builder->title('网站信息')->suggest('此处配置网站的一般信息。');
+        /*        $builder->keySelect('LANG', '网站语言', '选择网站默认语言', array('zh-cn' => '简体中文', 'en-us' => '英文'));*/
         $builder->keyText('WEB_SITE_NAME', '网站名', '用于邮件,短信,站内信显示');
         $builder->keyText('ICP', '网站备案号', '设置在网站底部显示的备案号，如“沪ICP备12007941号-2');
+
         $builder->keySingleImage('LOGO', '网站Logo', '网站的logo设置，建议尺寸156*50');
         $builder->keySingleImage('QRCODE', '微信二维码', '悬浮微信二维码');
 
@@ -237,17 +239,22 @@ class ConfigController extends AdminController
         $builder->keySelect('PICTURE_UPLOAD_DRIVER', '图片上传驱动', '图片上传驱动', $opt);
         $builder->keySelect('DOWNLOAD_UPLOAD_DRIVER', '附件上传驱动', '附件上传驱动', $opt);
 
-        $builder->group('基本信息', array('WEB_SITE_NAME', 'ICP', 'LOGO', 'QRCODE'));
+        $builder->group('基本信息', array('WEB_SITE_NAME', 'ICP', 'LOGO', 'QRCODE', 'LANG'));
 
         $builder->group('页脚信息', array('ABOUT_US', 'SUBSCRIB_US', 'COPY_RIGHT'));
 
         $builder->group('跳转页面', array('JUMP_BACKGROUND', 'SUCCESS_WAIT_TIME', 'ERROR_WAIT_TIME'));
-
+        $builder->keyBool('GET_INFORMATION', '开启即时获取消息', '关闭之后，性能会有大幅度提升，系统的提示信息将不会再即时提示，必须刷新页面才会提示');
+        $builder->keyText('GET_INFORMATION_INTERNAL', '消息轮询间隔', '消息轮询间隔，以秒为单位，越大，性能开销越少');
+        $builder->group('性能设置', array('GET_INFORMATION','GET_INFORMATION_INTERNAL'));
         $builder->group('上传配置', array('PICTURE_UPLOAD_DRIVER', 'DOWNLOAD_UPLOAD_DRIVER'));
 
         $builder->data($data);
         $builder->keyDefault('SUCCESS_WAIT_TIME', 2);
         $builder->keyDefault('ERROR_WAIT_TIME', 5);
+        $builder->keyDefault('LANG', 'zh-cn');
+        $builder->keyDefault('GET_INFORMATION',1);
+        $builder->keyDefault('GET_INFORMATION_INTERNAL',10);
 
         $builder->buttonSubmit();
         $builder->display();

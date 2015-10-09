@@ -33,6 +33,5 @@ return array(
         '__CORE_JS__'=>__ROOT__.'/Application/Core/Static/js',
     ),
 
-
 );
 

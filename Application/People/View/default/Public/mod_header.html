@@ -12,7 +12,7 @@
                         <if condition="!empty($role_list)">
                             <ul class="nav nav-tabs" style="margin-left: -1px;">
                                 <li id="role_tab_">
-                                    <a data-role="select_role" data-id="0" style="border-top: none;padding-top: 9px;">全部</a>
+                                    <a data-role="select_role" data-id="0" style="border-top: none;padding-top: 9px;">{:L('all')}</a>
                                 </li>
                                 <volist name="role_list" id="role">
                                     <li id="role_tab_{$role.id}">
@@ -46,7 +46,7 @@
                         </div>
                         <div id="show_more_button_block" class="tag-select-block clearfix" style="padding-top:10px;text-align: center;border-top: 1px dashed #CDCDCD;display: none;">
                             <a href="javascript:void(0);" data-role="show_more_button" act-type="down" style="display: inline-block;width: 100%;">
-                                展开全部<i class="icon-double-angle-down" style="font-size: 16px;margin-left: 5px;"></i>
+                                {:L("unfold")}{:L("all")}<i class="icon-double-angle-down" style="font-size: 16px;margin-left: 5px;"></i>
                             </a>
                         </div>
                     </div>
@@ -64,11 +64,11 @@
                             var click_type=$(this).attr('act-type');
                             if(click_type=='down'){
                                 $(this).attr('act-type','up');
-                                $(this).html('临时收起<i class="icon-double-angle-up" style="font-size: 16px;margin-left: 5px;"></i>');
+                                $(this).html('{:L("temp_fold")}<i class="icon-double-angle-up" style="font-size: 16px;margin-left: 5px;"></i>');
                                 $('#tag_list_block').animate({"height":tag_list_block_height});
                             }else{
                                 $(this).attr('act-type','down');
-                                $(this).html('展开全部<i class="icon-double-angle-down" style="font-size: 16px;margin-left: 5px;"></i>');
+                                $(this).html('{:L("unfold")}{:L("all")}<i class="icon-double-angle-down" style="font-size: 16px;margin-left: 5px;"></i>');
                                 $('#tag_list_block').animate({"height":show_height});
                             }
                         });

@@ -957,7 +957,6 @@ function U($url = '', $vars = '', $suffix = true, $domain = false)
             }
         }
     }
-
     // 解析参数
     if (is_string($vars)) { // aaa=1&bbb=2 转换成数组
         parse_str($vars, $vars);
@@ -1032,7 +1031,8 @@ function U($url = '', $vars = '', $suffix = true, $domain = false)
         }
     }
 
-    if (C('URL_MODEL') == 0) { // 普通模式URL转换
+    $urlMode= MODULE_NAME=='Admin'?3:  C('URL_MODEL');
+    if ($urlMode == 0) { // 普通模式URL转换
         $url = __APP__ . '?' . C('VAR_MODULE') . "={$module}&" . http_build_query(array_reverse($var));
         if ($urlCase) {
             $url = strtolower($url);
@@ -1042,7 +1042,7 @@ function U($url = '', $vars = '', $suffix = true, $domain = false)
             $url .= '&' . $vars;
         }
     } //伪静态路由规则优化 start 2014-8-29-添加
-    elseif (C('URL_MODEL') == 2) { //开启路由和Rewrite
+    elseif ($urlMode == 2) { //开启路由和Rewrite
         //载入路由
         $router_ruler = C('router');
         $router_key = $module . '/' . $var[$varController] . '/' . $var[$varAction];
@@ -1055,7 +1055,6 @@ function U($url = '', $vars = '', $suffix = true, $domain = false)
             } else {
                 $url = $router_ruler[$router_key];
             }
-
             //填充附加参数
             if ($urlCase) {
                 $url = strtolower($url);

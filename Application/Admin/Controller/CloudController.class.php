@@ -754,7 +754,7 @@ str
         $_SESSION['cloud_cookie'] = $aCookie;
         $this->display();
         set_time_limit(0);
-        $this->write('自动安装程序开始......<br/>开始获取版本信息......', 'info');
+        $this->write('自动安装程序开始......<br/>如果您在安装过程中遇到问题，请先确保全站文件权限都为<span class="text-danger">777</span><br/>开始获取版本信息......', 'info');
         $this->write('&nbsp;&nbsp;&nbsp;>连接远程服务器....', 'info');
         //   $this->writeMessage(file_get_contents($this->url(cloudU('Appstore/Install/getVersion'))));
         $data = $this->curl(appstoreU('Appstore/Install/getVersion', array('token' => $aToken)));
@@ -893,7 +893,6 @@ str
         $this->createFolder($localPath);
         $localFile =$localPath . $version['goods']['etitle']. '.zip';
         $this->downloadFile(appstoreU('Appstore/Index/download', array('token' => $token)),$localFile);
-
         //开始安装
         $this->unzipFile($localFile,APP_PATH);
         //todo 进行文件合法性检测，防止错误安装。

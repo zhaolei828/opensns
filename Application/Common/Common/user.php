@@ -42,7 +42,7 @@ function check_username(&$username, &$email, &$mobile, &$type = 0)
         }
     } else {
         $check_email = preg_match("/[a-z0-9_\-\.]+@([a-z0-9_\-]+?\.)+[a-z]{2,3}/i", $username, $match_email);
-        $check_mobile = preg_match("/^(1[3|4|5|8])[0-9]{9}$/", $username, $match_mobile);
+        $check_mobile = preg_match("/^(1[0-9])[0-9]{9}$/", $username, $match_mobile);
         if ($check_email) {
             $email = $username;
             $username = '';

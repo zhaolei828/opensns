@@ -21,7 +21,7 @@
                            if($comment['uid']){
                        </php>
 
-                  <a href="{$comment.user.space_url}"  ucard="{$comment.user.uid}"><strong>{$comment.user.nickname|op_t}</strong></a> {:W('Common/UserRank/render',array($comment['uid']))}
+                  <a href="{$comment.user.space_url}"  ucard="{$comment.user.uid}"><strong>{$comment.user.nickname}</strong></a> {:W('Common/UserRank/render',array($comment['uid']))}
                          <php>}else{</php>
 
                      <a href="javascript:" ><strong>游客</strong></a><if condition="$comment['area']">（{$comment.area}）</if>
@@ -35,7 +35,7 @@
             <php>
                 if($comment['uid']){
             </php>
-            <a href="javascript:" data-role="reply_local_comment" data-nickname="{$comment.user.nickname|op_t}">回复</a>
+            <a href="javascript:" data-role="reply_local_comment" data-nickname="{$comment.user.real_nickname}">回复</a>
 
             <php>if(check_auth('deleteLocalComment',$comment['uid'])){</php>
             <a href="javascript:" data-role="delete_local_comment" data-id="{$comment.id}">删除</a>

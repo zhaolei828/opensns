@@ -221,6 +221,26 @@ function int_to_string(&$data, $map = array('status' => array(1 => '正常', -1 
     return $data;
 }
 
+function lists_plus(&$data)
+{
+    $alias = M('module')->select();
+    foreach ($alias as $value) {
+        $alias_set[$value['name']] = $value['alias'];
+    }
+    foreach ($data as $key => $value) {
+        $data[$key]['alias'] = $alias_set[$data[$key]['module']];
+
+        $mid = M('action_log')->field("max(create_time),remark")->where('action_id=' . $data[$key]['id'])->select();
+        $mid_s = $mid[0]['remark'];
+        if( isset($mid_s) && strpos($mid_s , '积分') !== false)
+        {
+        $data[$key]['vary'] = $mid_s;
+        }
+
+    }
+    return $data;
+}
+
 /**
  * 动态扩展左侧菜单,base.html里用到
  * @author 朱亚杰 <zhuyajie@topthink.net>
@@ -422,21 +442,24 @@ function get_action_type($type, $all = false)
 }
 
 
-function cloudU($url, $p=array())
+function cloudU($url, $p = array())
 {
     $url = adminU($url, $p);
     return str_replace(__ROOT__, '', $url);
 }
 
-function appstoreU($url,$p=array()){
-    return C('__CLOUD__').cloudU($url,$p);
+function appstoreU($url, $p = array())
+{
+    return C('__CLOUD__') . cloudU($url, $p);
 }
- function formatLog($log)
+
+function formatLog($log)
 {
     $log = explode("\r\n", $log);
     $log = '<li>' . implode('</li><li>', $log) . '</li>';
     return $log;
 }
+
 function adminU($url = '', $vars = '', $suffix = true, $domain = false)
 {
     // 解析URL
@@ -546,29 +569,29 @@ function adminU($url = '', $vars = '', $suffix = true, $domain = false)
         }
     }
 
-        if (isset($route)) {
-            $url = __APP__ . '/' . rtrim($url, $depr);
-        } else {
-            $module = (defined('BIND_MODULE') && BIND_MODULE == $module) ? '' : $module;
-            $url = __APP__ . '/' . ($module ? $module . MODULE_PATHINFO_DEPR : '') . implode($depr, array_reverse($var));
+    if (isset($route)) {
+        $url = __APP__ . '/' . rtrim($url, $depr);
+    } else {
+        $module = (defined('BIND_MODULE') && BIND_MODULE == $module) ? '' : $module;
+        $url = __APP__ . '/' . ($module ? $module . MODULE_PATHINFO_DEPR : '') . implode($depr, array_reverse($var));
+    }
+    if ($urlCase) {
+        $url = strtolower($url);
+    }
+    if (!empty($vars)) { // 添加参数
+        foreach ($vars as $var => $val) {
+            if ('' !== trim($val)) $url .= $depr . $var . $depr . urlencode($val);
         }
-        if ($urlCase) {
-            $url = strtolower($url);
+    }
+    if ($suffix) {
+        $suffix = $suffix === true ? C('URL_HTML_SUFFIX') : $suffix;
+        if ($pos = strpos($suffix, '|')) {
+            $suffix = substr($suffix, 0, $pos);
         }
-        if (!empty($vars)) { // 添加参数
-            foreach ($vars as $var => $val) {
-                if ('' !== trim($val)) $url .= $depr . $var . $depr . urlencode($val);
-            }
+        if ($suffix && '/' != substr($url, -1)) {
+            $url .= '.' . ltrim($suffix, '.');
         }
-        if ($suffix) {
-            $suffix = $suffix === true ? C('URL_HTML_SUFFIX') : $suffix;
-            if ($pos = strpos($suffix, '|')) {
-                $suffix = substr($suffix, 0, $pos);
-            }
-            if ($suffix && '/' != substr($url, -1)) {
-                $url .= '.' . ltrim($suffix, '.');
-            }
-        }
+    }
 
     if (isset($anchor)) {
         $url .= '#' . $anchor;
@@ -577,4 +600,19 @@ function adminU($url = '', $vars = '', $suffix = true, $domain = false)
         $url = (is_ssl() ? 'https://' : 'http://') . $domain . $url;
     }
     return $url;
+}
+
+
+function show_cloud_cover($path){
+    //不存在http://
+    $not_http_remote=(strpos($path, 'http://') === false);
+    //不存在https://
+    $not_https_remote=(strpos($path, 'https://') === false);
+    if ($not_http_remote && $not_https_remote) {
+        //本地url
+        return str_replace('//', '/', C('TMPL_PARSE_STRING.__CLOUD__') . $path); //防止双斜杠的出现
+    } else {
+        //远端url
+        return $path;
+    }
 }

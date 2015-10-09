@@ -5,23 +5,23 @@
             <div class="col-xs-4">
 
                 <h2>
-                    <i class="icon-location-arrow"></i> 关于我们
+                    <i class="icon-location-arrow"></i> {:L('about_us')}
                 </h2>
                 <p>
-                    {:modC('ABOUT_US','暂未设置','Config')}
+                    {:modC('ABOUT_US',L('not_set_now'),'Config')}
                 </p>
             </div>
             <div class="col-xs-4">
                 <h2>
-                    <i class="icon-star-empty"></i> 关注我们
+                    <i class="icon-star-empty"></i> {:L('follow_us')}
                 </h2>
                 <p>
-                    {:modC('SUBSCRIB_US','暂未设置','Config')}
+                    {:modC('SUBSCRIB_US',L('not_set_now'),'Config')}
                 </p>
             </div>
             <div class="col-xs-4">
                 <h2>
-                    <i class="icon-link"></i> 友情链接
+                    <i class="icon-link"></i> {:L('friendly_link')}
                 </h2>
 
                 <ul class="friend-link">
@@ -34,9 +34,9 @@
         <div class="row text-center">
             <hr>
 
-                <h4> {:modC('COPY_RIGHT','暂未设置','Config')}</h4>
-                <div class="col-xs-12">备案号：<a href="http://www.miitbeian.gov.cn/" target="_blank">
-                    {:modC('ICP','暂未设置','Config')} </a>
+                <h4> {:modC('COPY_RIGHT',L('not_set_now'),'Config')}</h4>
+                <div class="col-xs-12">{:L('Record_n')}<a href="http://www.miitbeian.gov.cn/" target="_blank">
+                    {:modC('ICP',L('not_set_now'),'Config')} </a>
                 </div>
 
             {$count_code}

@@ -68,4 +68,14 @@ define ('RUNTIME_PATH', './Runtime/');
  * 引入核心入口
  * ThinkPHP亦可移动到WEB以外的目录
  */
-require './ThinkPHP/ThinkPHP.php';
+try{
+    require './ThinkPHP/ThinkPHP.php';
+}catch (\Exception $exception){
+    if($exception->getCode()==815){
+        send_http_status(404);
+        $string=file_get_contents('./404.html');
+        $string=str_replace('$ERROR_MESSAGE',$exception->getMessage(),$string);
+        $string=str_replace('HTTP_HOST','http://'.$_SERVER['HTTP_HOST'],$string);
+        echo $string;
+    }
+}

@@ -132,11 +132,10 @@ class BaseController extends AddonsController
         $data['oauth_token_secret'] = $this->openid;
         $data['type'] = $this->type;
         $syncModel =  D('sync_login');
-        if($syncModel->where($data)->count()){
-            $syncModel->where($data)->delete();
+        if(!$syncModel->where($data)->count()){
+            $syncModel->add($data);
         }
-        $res =$syncModel->add($data);
-        return $res;
+        return true;
     }
 
 
@@ -267,7 +266,10 @@ class BaseController extends AddonsController
         if (0 < $uid) { //注册成功
             $this->addSyncLoginData($uid);
 
-            $this->initRoleUser(1, $uid); //初始化角色用户
+            $config =  D('addons')->where(array('name'=>'SyncLogin'))->find();
+            $config   =   json_decode($config['config'], true);
+
+            $this->initRoleUser($config['role'], $uid); //初始化角色用户
 
             $uid = $ucenterModel->login($aUsername, $aPassword, 1); //通过账号密码取到uid
             $this->doLogin($uid);
